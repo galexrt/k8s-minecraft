@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "waterfall.fullname" . }}-test-connection"
+  labels:
+    {{- include "waterfall.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "waterfall.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
