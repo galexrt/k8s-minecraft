@@ -6,6 +6,7 @@ metadata:
     {{- include "waterfall.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  serviceName: {{ include "waterfall.fullname" . }}
   selector:
     matchLabels:
       {{- include "waterfall.selectorLabels" . | nindent 6 }}
@@ -27,13 +28,17 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          {{- with .Values.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: paper
-              containerPort: 25565
+            - name: waterfall
+              containerPort: 25577
               protocol: TCP
           volumeMounts:
             - name: server-data
@@ -66,11 +71,11 @@ spec:
     kind: PersistentVolumeClaim
     metadata:
       labels:
-        {{- include "waterfall.labels" . | nindent 4 }}
+        {{- include "waterfall.labels" . | nindent 8 }}
       name: server-data
     spec:
       accessModes:
-        {{- .Values.storage.capacity | nindent 8 }}
+        {{- .Values.storage.accessModes | toYaml | nindent 8 }}
       resources:
         requests:
           storage: {{ .Values.storage.capacity }}

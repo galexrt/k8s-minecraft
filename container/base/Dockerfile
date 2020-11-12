@@ -2,6 +2,8 @@ FROM fedora:33
 
 ENV HOME="/minecraft" DATA_DIR="/data"
 
+COPY rootfs /
+
 RUN dnf upgrade -y && \
     dnf install -y java-latest-openjdk wget && \
     mkdir -p "$DATA_DIR" && \
@@ -14,8 +16,13 @@ RUN dnf upgrade -y && \
         --home-dir "$HOME" \
         minecraft && \
     chmod 770 -R "$HOME" "$DATA_DIR" && \
-    chown 1337:1337 -R "$DATA_DIR"
+    chown 1337:1337 -R "$DATA_DIR" && \
+    chmod 755 /scripts/*
 
 WORKDIR "$DATA_DIR"
 
 USER 1337
+
+ENTRYPOINT ["/scripts/entrypoint.sh"]
+
+CMD ["java"]

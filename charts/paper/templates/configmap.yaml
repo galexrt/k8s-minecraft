@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  eula.txt: |
+  {{- index .Values.config "eula.txt" | nindent 4 }}
+metadata:
+  name: {{ include "paper.fullname" . }}
+  labels:
+    {{- include "paper.labels" . | nindent 4 }}

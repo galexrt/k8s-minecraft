@@ -6,6 +6,7 @@ metadata:
     {{- include "paper.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  serviceName: {{ include "paper.fullname" . }}
   selector:
     matchLabels:
       {{- include "paper.selectorLabels" . | nindent 6 }}
@@ -27,18 +28,26 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          {{- with .Values.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: waterfall
-              containerPort: 25577
+            - name: paper
+              containerPort: 25565
               protocol: TCP
           volumeMounts:
             - name: server-data
               mountPath: /data
               readOnly: false
+            - name: mc-eula-txt
+              mountPath: /data/eula.txt
+              subPath: eula.txt
+              readOnly: true
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -61,16 +70,23 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: mc-eula-txt
+          configMap:
+            name: {{ include "paper.fullname" . }}
+            items:
+            - key: eula.txt
+              path: eula.txt
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
       labels:
-        {{- include "waterfall.labels" . | nindent 4 }}
+        {{- include "paper.labels" . | nindent 8 }}
       name: server-data
     spec:
       accessModes:
-        {{- .Values.storage.capacity | nindent 8 }}
+        {{- .Values.storage.accessModes | toYaml | nindent 8 }}
       resources:
         requests:
           storage: {{ .Values.storage.capacity }}
