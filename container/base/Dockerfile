@@ -16,4 +16,6 @@ RUN dnf upgrade -y && \
     chmod 770 -R "$HOME" "$DATA_DIR" && \
     chown 1337:1337 -R "$DATA_DIR"
 
+WORKDIR "$DATA_DIR"
+
 USER 1337

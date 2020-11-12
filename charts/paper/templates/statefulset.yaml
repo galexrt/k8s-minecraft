@@ -1,16 +1,14 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ include "waterfall.fullname" . }}
+  name: {{ include "paper.fullname" . }}
   labels:
-    {{- include "waterfall.labels" . | nindent 4 }}
+    {{- include "paper.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
-      {{- include "waterfall.selectorLabels" . | nindent 6 }}
+      {{- include "paper.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +16,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "waterfall.selectorLabels" . | nindent 8 }}
+        {{- include "paper.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "waterfall.serviceAccountName" . }}
+      serviceAccountName: {{ include "paper.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -34,17 +32,21 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 80
+            - name: waterfall
+              containerPort: 25577
               protocol: TCP
+          volumeMounts:
+            - name: server-data
+              mountPath: /data
+              readOnly: false
+          {{- with .Values.livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -59,3 +61,17 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        {{- include "waterfall.labels" . | nindent 4 }}
+      name: server-data
+    spec:
+      accessModes:
+        {{- .Values.storage.capacity | nindent 8 }}
+      resources:
+        requests:
+          storage: {{ .Values.storage.capacity }}
+      storageClassName: {{ .Values.storage.storageClassName }}
