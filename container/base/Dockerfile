@@ -6,6 +6,7 @@ COPY rootfs /
 
 RUN dnf upgrade -y && \
     dnf install -y java-latest-openjdk wget && \
+    dnf clean all && \
     mkdir -p "$DATA_DIR" && \
     groupadd \
         --gid 1337 \
