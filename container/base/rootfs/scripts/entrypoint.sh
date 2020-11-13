@@ -5,7 +5,7 @@ JAVA_FLAGS="${JAVA_FLAGS:-}"
 
 if [ -d /custom_data/ ]; then
     echo "Copying /custom_data dir to /data"
-    cp -ar /custom_data/ /data/
+    cp -ar /custom_data/* /data/
 fi
 
 if [ "${1}" = "java" ]; then
