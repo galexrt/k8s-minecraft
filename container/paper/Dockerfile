@@ -1,6 +1,6 @@
 FROM quay.io/galexrt/k8s-minecraft:base-latest
 
-ARG PAPER_DL_URL="https://papermc.io/api/v1/paper/1.16.4/274/download"
+ARG PAPER_DL_URL="https://papermc.io/api/v1/paper/1.16.4/276/download"
 
 ENV JAVA_JAR="$HOME/paper.jar"
 
