@@ -5,7 +5,7 @@ ENV HOME="/minecraft" DATA_DIR="/data"
 COPY rootfs /
 
 RUN dnf upgrade -y && \
-    dnf install -y java-latest-openjdk wget && \
+    dnf install -y java-latest-openjdk wget screen && \
     dnf clean all && \
     mkdir -p "$DATA_DIR" && \
     groupadd \
