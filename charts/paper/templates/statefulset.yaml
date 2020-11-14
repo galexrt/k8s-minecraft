@@ -28,6 +28,8 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          stdin: true 
+          tty: true
           {{- with .Values.args }}
           args:
             {{- toYaml . | nindent 12 }}
