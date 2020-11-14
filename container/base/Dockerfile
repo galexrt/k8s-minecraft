@@ -17,7 +17,7 @@ RUN dnf upgrade -y && \
         --home-dir "$HOME" \
         minecraft && \
     chmod 770 -R "$HOME" "$DATA_DIR" && \
-    chown 1337:1337 -R "$DATA_DIR" && \
+    chown 1337:1337 -R "$HOME" "$DATA_DIR" && \
     chmod 755 /scripts/*
 
 WORKDIR "$DATA_DIR"
