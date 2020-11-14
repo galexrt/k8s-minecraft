@@ -14,6 +14,7 @@ RUN dnf upgrade -y && \
     useradd \
         --uid 1337 \
         --gid 1337 \
+        --create-home \
         --home-dir "$HOME" \
         minecraft && \
     chmod 770 -R "$HOME" "$DATA_DIR" && \
