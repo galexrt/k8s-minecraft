@@ -1,5 +1,8 @@
 #!/bin/bash
 
+SCREEN_COMMAND="${SCREEN_COMMAND:-/usr/bin/screen}"
+SCREEN_NAME="${SCREEN_NAME:-gameserver}"
+
 JAVA_JAR="${JAVA_JAR:-}"
 JAVA_FLAGS="${JAVA_FLAGS:-}"
 
@@ -21,9 +24,10 @@ if [ "${1}" = "java" ]; then
     else
         echo "WARNING! No JAVA_JAR var set in container."
     fi
-
-    exec /usr/bin/java "${@}"
+    set -x
+    exec "${SCREEN_COMMAND}" -S "${SCREEN_NAME}" /usr/bin/java "${@}"
 fi
 
 echo "Running arbitrary command ..."
+set -x
 exec "${@}"
