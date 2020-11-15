@@ -12,5 +12,8 @@ spec:
       targetPort: paper
       protocol: TCP
       name: server
+    {{- with .Values.additionalServicePorts }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   selector:
     {{- include "paper.selectorLabels" . | nindent 4 }}

@@ -12,5 +12,8 @@ spec:
       targetPort: 25577
       protocol: TCP
       name: server
+    {{- with .Values.additionalServicePorts }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   selector:
     {{- include "waterfall.selectorLabels" . | nindent 4 }}

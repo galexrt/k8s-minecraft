@@ -70,3 +70,17 @@ additionalPorts: []
 #  - name: dynmap
 #    containerPort: 8123
 #    protocol: TCP
+# For, e.g., https://github.com/sladkoff/minecraft-prometheus-exporter
+#  - name: metrics
+#    containerPort: 9225
+#    protocol: TCP
+
+additionalServicePorts: []
+# For, e.g., https://github.com/sladkoff/minecraft-prometheus-exporter
+#  - port: 9225
+#    targetPort: 9225
+#    protocol: TCP
+#    name: metrics
+
+serviceMonitor:
+  enabled: false
