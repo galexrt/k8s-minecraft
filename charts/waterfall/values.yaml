@@ -65,3 +65,8 @@ storage:
   - ReadWriteOnce
   capacity: "50Gi"
   storageClassName: ""
+
+additionalPorts: []
+#  - name: dynmap
+#    containerPort: 8123
+#    protocol: TCP

@@ -72,3 +72,8 @@ config:
     #You also agree that tacos are tasty, and the best food in the world.
     #Thu Nov 12 20:33:30 UTC 2020
     eula=true
+
+additionalPorts: []
+#  - name: dynmap
+#    containerPort: 8123
+#    protocol: TCP

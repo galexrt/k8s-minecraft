@@ -42,6 +42,9 @@ spec:
             - name: paper
               containerPort: 25565
               protocol: TCP
+          {{- with .Values.additionalPorts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: server-data
               mountPath: /data
