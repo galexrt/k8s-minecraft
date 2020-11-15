@@ -15,4 +15,6 @@ spec:
   selector:
     matchLabels:
       {{- include "waterfall.selectorLabels" . | nindent 6 }}
+  targetLabels:
+    - server_name
 {{- end }}
