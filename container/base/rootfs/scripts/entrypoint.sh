@@ -8,6 +8,14 @@ if [ -d /custom_data/ ]; then
     cp -ar /custom_data/* /data/
 fi
 
+if [ -d /custom_scripts/ ]; then
+    for f in /custom_scripts/*.sh; do
+        echo "Running custom_script ${f} ..."
+        bash "${f}"
+        echo "Done. Ran custom_script ${f}."
+    done
+fi
+
 if [ "${1}" = "java" ]; then
     echo "Running java jar because first arg ist 'java' ..."
     shift
@@ -21,7 +29,8 @@ if [ "${1}" = "java" ]; then
     else
         echo "WARNING! No JAVA_JAR var set in container."
     fi
-    set -x
+
+    echo "Running java command: /usr/bin/java ${@}"
     exec /usr/bin/java "${@}"
 fi
 
