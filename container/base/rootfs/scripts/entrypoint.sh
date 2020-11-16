@@ -3,17 +3,25 @@
 JAVA_JAR="${JAVA_JAR:-}"
 JAVA_FLAGS="${JAVA_FLAGS:-}"
 
-if [ -d /custom_scripts/ ]; then
-    for f in /custom_scripts/*.sh; do
-        echo "Running custom_script ${f} ..."
+if [ -d /custom_scripts/pre/ ]; then
+    for f in /custom_scripts/pre/*.sh; do
+        echo "Running pre custom_script ${f} ..."
         bash "${f}"
-        echo "Done. Ran custom_script ${f}."
+        echo "Done. Ran pre custom_script ${f}."
     done
 fi
 
 if [ -d /custom_data/ ]; then
     echo "Copying /custom_data dir to /data"
     cp -ar /custom_data/* /data/
+fi
+
+if [ -d /custom_scripts/post/ ]; then
+    for f in /custom_scripts/post/*.sh; do
+        echo "Running post custom_script ${f} ..."
+        bash "${f}"
+        echo "Done. Ran post custom_script ${f}."
+    done
 fi
 
 if [ "${1}" = "java" ]; then
