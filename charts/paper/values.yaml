@@ -92,3 +92,6 @@ additionalServicePorts: []
 
 serviceMonitor:
   enabled: false
+
+java:
+  args: ""
