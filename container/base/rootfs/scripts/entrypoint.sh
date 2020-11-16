@@ -20,14 +20,14 @@ if [ "${1}" = "java" ]; then
     echo "Running java jar because first arg ist 'java' ..."
     shift
 
-    if [ -n "${JAVA_FLAGS}" ]; then
-        echo "Adding JAVA_FLAGS to args: ${JAVA_FLAGS}"
-        set -- ${JAVA_FLAGS} "$@"
-    fi
     if [ -n "${JAVA_JAR}" ]; then
         set -- -jar "${JAVA_JAR}" "$@"
     else
         echo "WARNING! No JAVA_JAR var set in container."
+    fi
+    if [ -n "${JAVA_FLAGS}" ]; then
+        echo "Adding JAVA_FLAGS to args: ${JAVA_FLAGS}"
+        set -- ${JAVA_FLAGS} "$@"
     fi
 
     echo "Running java command: /usr/bin/java ${@}"
