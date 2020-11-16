@@ -22,7 +22,7 @@ if [ "${1}" = "java" ]; then
 
     if [ -n "${JAVA_FLAGS}" ]; then
         echo "Adding JAVA_FLAGS to args: ${JAVA_FLAGS}"
-        set -- "${JAVA_FLAGS}" "$@"
+        set -- ${JAVA_FLAGS} "$@"
     fi
     if [ -n "${JAVA_JAR}" ]; then
         set -- -jar "${JAVA_JAR}" "$@"
