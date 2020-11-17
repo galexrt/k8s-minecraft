@@ -23,6 +23,18 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+readinessProbe:
+  tcpSocket:
+    port: 25577
+  initialDelaySeconds: 20
+  periodSeconds: 7
+
+livenessProbe:
+  tcpSocket:
+    port: 25577
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
 podAnnotations: {}
 
 podSecurityContext:
