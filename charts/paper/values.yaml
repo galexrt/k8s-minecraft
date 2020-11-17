@@ -93,6 +93,7 @@ additionalServicePorts: []
 
 serviceMonitor:
   enabled: false
+  interval: 10s
 
 java:
   flags: ""
