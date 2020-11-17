@@ -1,13 +1,13 @@
-IMAGES ?= base paper waterfall
+IMAGES ?= base paper velocity waterfall
 
 .PHONY: build
 build:
-	cd base && make build
-	cd paper && make build
-	cd waterfall && make build
+	for image in $(IMAGES); do \
+        $(MAKE) -C $$image build; \
+    done
 
 .PHONY: push
 push:
-	cd base && make push
-	cd paper && make push
-	cd waterfall && make push
+	for image in $(IMAGES); do \
+        $(MAKE) -C $$image push; \
+    done
