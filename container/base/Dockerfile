@@ -5,7 +5,7 @@ ENV HOME="/minecraft" DATA_DIR="/data"
 COPY rootfs /
 
 RUN dnf upgrade -y && \
-    dnf install -y java-latest-openjdk wget procps net-tools && \
+    dnf install -y java-1.8.0-openjdk wget procps net-tools && \
     dnf clean all && \
     mkdir -p "$DATA_DIR" /custom_data /custom_scripts && \
     groupadd \
