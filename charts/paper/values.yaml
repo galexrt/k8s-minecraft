@@ -109,3 +109,9 @@ serviceMonitor:
 
 java:
   flags: ""
+
+additionalVolumeMounts: []
+
+additionalVolumes: []
+
+additionalVolumeClaimTemplates: []

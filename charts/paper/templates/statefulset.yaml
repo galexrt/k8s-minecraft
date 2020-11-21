@@ -58,6 +58,9 @@ spec:
               mountPath: /data/eula.txt
               subPath: eula.txt
               readOnly: true
+            {{- with .Values.additionalVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -87,6 +90,9 @@ spec:
             items:
             - key: eula.txt
               path: eula.txt
+      {{- with .Values.additionalVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim
@@ -101,3 +107,6 @@ spec:
         requests:
           storage: {{ .Values.storage.capacity }}
       storageClassName: {{ .Values.storage.storageClassName }}
+  {{- with .Values.additionalVolumeClaimTemplates }}
+  {{- toYaml . | nindent 2 }}    
+  {{- end }}
