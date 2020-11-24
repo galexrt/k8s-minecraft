@@ -105,4 +105,4 @@ additionalVolumes: []
 
 additionalVolumeClaimTemplates: []
 
-additionalEnv: []
+additionalEnv: {}

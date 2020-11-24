@@ -35,8 +35,9 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           env:
-          {{- with .Values.additionalEnv }}
-            {{ toYaml . | nindent 12 }}
+          {{ range $k, $v := .Values.additionalEnv }}
+            - name: {{ $k | quote }}
+              value: {{ $v | quote }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
