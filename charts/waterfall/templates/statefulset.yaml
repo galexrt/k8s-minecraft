@@ -34,10 +34,9 @@ spec:
           args:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.java.flags }}
           env:
-            - name: JAVA_FLAGS
-              value: {{ . | quote }}
+          {{- with .Values.additionalEnv }}
+            {{ toYaml . | nindent 12 }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

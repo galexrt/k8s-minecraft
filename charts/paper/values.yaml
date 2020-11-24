@@ -107,11 +107,10 @@ serviceMonitor:
   enabled: false
   interval: 10s
 
-java:
-  flags: ""
-
 additionalVolumeMounts: []
 
 additionalVolumes: []
 
 additionalVolumeClaimTemplates: []
+
+additionalEnv: []
