@@ -1,10 +1,17 @@
 FROM fedora:33
 
-ENV HOME="/minecraft" DATA_DIR="/data"
+ENV HOME="/minecraft" \
+    DATA_DIR="/data" \
+    LANG="en_US.UTF-8" \
+    LANGUAGE="en_US" \
+    LC_ALL="en_US.UTF-8"
 
 COPY rootfs /
 
-RUN dnf upgrade -y && \
+RUN echo "$LANG UTF-8" >> /etc/locale.gen && \
+    locale-gen && \
+    update-locale --reset LANG=$LANG && \
+    dnf upgrade -y && \
     dnf install -y java-1.8.0-openjdk wget procps net-tools findutils && \
     dnf clean all && \
     mkdir -p "$DATA_DIR" /custom_data /custom_scripts && \

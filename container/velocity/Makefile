@@ -1,7 +1,7 @@
 .PHONY: build
 build:
-	docker build -t quay.io/galexrt/k8s-minecraft:velocity-latest .
+	BUILDAH_LAYERS=true buildah bud -t quay.io/galexrt/k8s-minecraft:velocity-latest .
 
 .PHONY: push
 push:
-	docker push quay.io/galexrt/k8s-minecraft:velocity-latest
+	buildah push quay.io/galexrt/k8s-minecraft:velocity-latest
