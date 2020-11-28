@@ -106,3 +106,5 @@ additionalVolumes: []
 additionalVolumeClaimTemplates: []
 
 additionalEnv: {}
+
+additionalContainers: []
