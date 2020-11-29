@@ -1,0 +1,7 @@
+{{- with .Values.additionalObjects -}}
+---
+{{ range $k, $v := . }}
+{{- toYaml $v }}
+---
+{{- end }}
+{{- end }}
