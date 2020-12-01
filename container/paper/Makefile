@@ -1,6 +1,8 @@
+include ../Makefile.common
+
 .PHONY: build
 build:
-	BUILDAH_LAYERS=true buildah bud -t quay.io/galexrt/k8s-minecraft:paper-latest .
+	BUILDAH_LAYERS=$(BUILDAH_LAYERS) buildah bud -t quay.io/galexrt/k8s-minecraft:paper-latest .
 
 .PHONY: push
 push:
