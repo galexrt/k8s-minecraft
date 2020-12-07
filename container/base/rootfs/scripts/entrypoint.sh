@@ -13,7 +13,8 @@ fi
 
 if [ -d /custom_data/ ]; then
     echo "Copying /custom_data dir to /data"
-    cp -ar /custom_data/* /data/
+    rsync -aurv /custom_data/ /data/
+    echo "Done. Copying /custom_data dir"
 fi
 
 if [ -d /custom_scripts/post/ ]; then
