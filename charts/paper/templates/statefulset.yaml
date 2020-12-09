@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "paper.labels" . | nindent 4 }}
 spec:
+  podManagementPolicy: {{ .Values.podManagementPolicy }}
   replicas: {{ .Values.replicaCount }}
   serviceName: {{ include "paper.fullname" . }}
   selector:

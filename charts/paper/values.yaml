@@ -72,6 +72,8 @@ affinity: {}
 
 terminationGracePeriodSeconds: 45
 
+podManagementPolicy: OrderedReady
+
 # If you want to pass flags after the `-jar FILE_NAME`, set them here beginning with `java` as the first one
 args: []
 

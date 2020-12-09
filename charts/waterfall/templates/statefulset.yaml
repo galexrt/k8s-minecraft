@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "waterfall.labels" . | nindent 4 }}
 spec:
+  podManagementPolicy: {{ .Values.podManagementPolicy }}
   replicas: {{ .Values.replicaCount }}
   serviceName: {{ include "waterfall.fullname" . }}
   selector:
