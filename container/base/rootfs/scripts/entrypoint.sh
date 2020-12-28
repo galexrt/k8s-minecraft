@@ -1,5 +1,7 @@
 #!/bin/bash
 
+RSYNC_FLAGS="${RSYNC_FLAGS:--aurv}"
+
 JAVA_JAR="${JAVA_JAR:-}"
 JAVA_FLAGS="${JAVA_FLAGS:-}"
 
@@ -13,7 +15,8 @@ fi
 
 if [ -d /custom_data/ ]; then
     echo "Copying /custom_data dir to /data"
-    rsync -aurv /custom_data/ /data/
+    # shellcheck disable=SC2145,SC2086
+    rsync ${RSYNC_FLAGS} /custom_data/ /data/
     echo "Done. Copying /custom_data dir"
 fi
 
@@ -36,9 +39,11 @@ if [ "${1}" = "java" ]; then
     fi
     if [ -n "${JAVA_FLAGS}" ]; then
         echo "Adding JAVA_FLAGS to args: ${JAVA_FLAGS}"
+        # shellcheck disable=SC2086
         set -- ${JAVA_FLAGS} "$@"
     fi
 
+    # shellcheck disable=SC2145
     echo "Running java command: /usr/bin/java ${@}"
     exec /usr/bin/java "${@}"
 fi
