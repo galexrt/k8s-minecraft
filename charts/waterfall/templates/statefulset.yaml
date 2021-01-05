@@ -41,6 +41,10 @@ spec:
             - name: {{ $k | quote }}
               value: {{ $v | quote }}
           {{- end }}
+            - name: GAMESERVER_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
