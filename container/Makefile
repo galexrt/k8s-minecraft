@@ -1,16 +1,28 @@
 .EXPORT_ALL_VARIABLES:
 
+BUILDAH ?= buildah
+BUILDAH_LAYERS ?= false
+
 IMAGES ?= base paper velocity waterfall
-BUILDAH_LAYERS ?= true
 
 .PHONY: build
-build:
-	for image in $(IMAGES); do \
-		$(MAKE) -C $$image build; \
-	done
+build: $(addprefix build-, $(IMAGES))
+
+build-%:
+	$(MAKE) -C $* build
 
 .PHONY: push
-push:
-	for image in $(IMAGES); do \
-		$(MAKE) -C $$image push; \
-	done
+push: $(addprefix push-, $(IMAGES))
+
+push-%:
+	$(MAKE) -C $* push
+
+.PHONY: clean
+clean: $(addprefix clean-, $(IMAGES))
+
+clean-%:
+	$(MAKE) -C $* clean
+
+clean-system:
+	$(BUILDAH) \
+		rmi -p

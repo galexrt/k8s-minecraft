@@ -1,9 +1,4 @@
+VERSION ?= 1.16/392
+IMAGE_NAME = waterfall
+
 include ../Makefile.common
-
-.PHONY: build
-build:
-	BUILDAH_LAYERS=$(BUILDAH_LAYERS) buildah bud -t quay.io/galexrt/k8s-minecraft:waterfall-latest .
-
-.PHONY: push
-push:
-	buildah push quay.io/galexrt/k8s-minecraft:waterfall-latest

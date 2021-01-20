@@ -1,1 +1,35 @@
+BUILDAH ?= buildah
 BUILDAH_LAYERS ?= true
+
+CONTAINER_IMAGE_NAME = quay.io/galexrt/k8s-minecraft
+VERSION ?= $(error no VERSION var set)
+VERSION_TAG ?= $(subst /,-,$(VERSION))
+
+.PHONY: build
+build:
+	BUILDAH_LAYERS=$(BUILDAH_LAYERS) $(BUILDAH) \
+		bud \
+		--build-arg="VERSION=$(VERSION)" \
+		-t $(CONTAINER_IMAGE_NAME):$(IMAGE_NAME)-latest \
+		.
+
+	# Tag latest with version tag as well
+	$(BUILDAH) tag \
+		$(CONTAINER_IMAGE_NAME):$(IMAGE_NAME)-latest \
+		$(CONTAINER_IMAGE_NAME):$(IMAGE_NAME)-v$(VERSION_TAG)
+
+.PHONY: push
+push:
+	$(BUILDAH) \
+		push \
+		$(CONTAINER_IMAGE_NAME):$(IMAGE_NAME)-latest
+	$(BUILDAH) \
+		push \
+		$(CONTAINER_IMAGE_NAME):$(IMAGE_NAME)-v$(VERSION_TAG)
+
+.PHONY: clean
+clean:
+	-$(BUILDAH) \
+		rmi \
+		$(CONTAINER_IMAGE_NAME):$(IMAGE_NAME)-latest \
+		$(CONTAINER_IMAGE_NAME):$(IMAGE_NAME)-v$(VERSION_TAG)

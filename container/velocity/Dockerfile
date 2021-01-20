@@ -1,9 +1,9 @@
 FROM quay.io/galexrt/k8s-minecraft:base-latest
 
-ARG VELOCITY_DL_URL="https://versions.velocitypowered.com/download/1.1.0.jar"
+ARG VERSION
 
-ENV JAVA_JAR="$HOME/velocity.jar"
+ENV JAVA_JAR="${HOME}/velocity.jar" VELOCITY_VERSION="${VERSION}"
 
-RUN wget -q -O "$HOME/velocity.jar" "$VELOCITY_DL_URL"
+RUN wget -q -O "${HOME}/velocity.jar" "https://versions.velocitypowered.com/download/${VELOCITY_VERSION}.jar"
 
 EXPOSE 25577/tcp
