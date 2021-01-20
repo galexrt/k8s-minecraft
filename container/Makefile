@@ -24,5 +24,5 @@ clean-%:
 	$(MAKE) -C $* clean
 
 clean-system:
-	$(BUILDAH) \
-		rmi -p
+	-$(BUILDAH) \
+		rmi --force --all
