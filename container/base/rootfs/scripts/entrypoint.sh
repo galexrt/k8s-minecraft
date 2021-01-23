@@ -43,8 +43,8 @@ if [ "${1}" = "java" ]; then
         set -- ${JAVA_FLAGS} "$@"
     fi
 
-    # shellcheck disable=SC2145
-    echo "Running java command: /usr/bin/java ${@}"
+    echo "Running java command:"
+    set -x
     exec /usr/bin/java "${@}"
 fi
 
