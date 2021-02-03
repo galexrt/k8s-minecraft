@@ -8,7 +8,7 @@ JAVA_FLAGS="${JAVA_FLAGS:-}"
 if [ -d /custom_scripts/pre/ ]; then
     for f in /custom_scripts/pre/*.sh; do
         echo "Running pre custom_script ${f} ..."
-        bash "${f}"
+        bash "${f}" || { echo "pre custom_script ${f} failed. Exiting ..."; exit 1; }
         echo "Done. Ran pre custom_script ${f}."
     done
 fi
@@ -23,7 +23,7 @@ fi
 if [ -d /custom_scripts/post/ ]; then
     for f in /custom_scripts/post/*.sh; do
         echo "Running post custom_script ${f} ..."
-        bash "${f}"
+        bash "${f}" || { echo "post custom_script ${f} failed. Exiting ..."; exit 1; }
         echo "Done. Ran post custom_script ${f}."
     done
 fi
