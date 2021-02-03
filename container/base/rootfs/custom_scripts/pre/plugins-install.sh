@@ -12,8 +12,7 @@ if [ "${CUSTOM_SCRIPT_PLUGINS_INSTALL}" != "true" ]; then
 fi
 
 if [ ! -f "/data/.plugins_install_list.txt" ]; then
-    echo "Creating empty .plugins_install_list.txt for server and exiting ..."
-    echo "" > .plugins_install_list.txt
+    echo "No .plugins_install_list.txt found, skipping ..."
     exit
 fi
 
