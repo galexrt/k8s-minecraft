@@ -12,6 +12,7 @@ GAMESERVER_SERVER_TYPE="${GAMESERVER_SERVER_TYPE:-unset}"
 
 echo "envsubst: Running envsubst on config files ..."
 for var in "${!GAMESERVER_@}"; do
+    echo "Replacing var ${var} in files ..."
     find /data/*.yml /data/plugins \
         \( \
             \( \
@@ -34,7 +35,6 @@ for var in "${!GAMESERVER_@}"; do
             \) -print0 \
         \) | \
             while IFS= read -r -d '' file; do
-                echo "Updating file: $file"
                 value="${!var}"
                 value="${value//\%POD_ID\%/${POD_ID}}"
                 sed -i 's#${'"${var}"'}#'"${value}"'#g' "${file}"
