@@ -7,6 +7,11 @@ SERVER_PROPERTIES_TWEAKS_FILE="${SERVER_PROPERTIES_TWEAKS_FILE:-/data/server-pro
 
 SERVER_HOSTNAME="${SERVER_HOSTNAME:-$(cat /etc/hostname | cut -d'-' -f1)}"
 
+if [ ! -f "${SERVER_PROPERTIES_FILE}" ]; then
+    echo "server.properties file not found. Skipping ..."
+    exit
+fi
+
 # Global settings
 echo "server.properties: Applying global fixed tweaks ..."
 sed -i \
