@@ -2,7 +2,7 @@
 
 set -e
 
-CUSTOM_SCRIPT_PLUGINS_INSTALL="${CUSTOM_SCRIPT_PLUGINS_INSTALL:-true}"
+CUSTOM_SCRIPT_PLUGINS_INSTALL="${CUSTOM_SCRIPT_PLUGINS_INSTALL:-false}"
 CUSTOM_SCRIPT_PLUGINS_DIR="${CUSTOM_SCRIPT_PLUGINS_DIR:-/repo/plugins}"
 RSYNC_FLAGS="${RSYNC_FLAGS:--aurv}"
 
@@ -11,9 +11,14 @@ if [ "${CUSTOM_SCRIPT_PLUGINS_INSTALL}" != "true" ]; then
     exit
 fi
 
-if [ ! -f "/data/.plugins_install_list.txt" ]; then
-    echo "No .plugins_install_list.txt found, skipping ..."
+if [ ! -f "/data/.plugins_install_list.txt" ] || [ -z "${PLUGINS_TO_INSTALL}" ]; then
+    echo "No .plugins_install_list.txt found and empty PLUGINS_TO_INSTALL env var, skipping plugins install ..."
     exit
+fi
+
+# When the env var is empty, read the plugins list file
+if [ -z "${PLUGINS_TO_INSTALL}" ]; then
+    PLUGINS_TO_INSTALL="$(sed '/^$/d' "/data/.plugins_install_list.txt")"
 fi
 
 while IFS= read -r plugin; do
@@ -25,4 +30,4 @@ while IFS= read -r plugin; do
 
     # shellcheck disable=SC2145,SC2086
     rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}/" /data/plugins/
-done < <(sed '/^$/d' "/data/.plugins_install_list.txt")
+done < <(printf '%s\n' "${PLUGINS_TO_INSTALL}")

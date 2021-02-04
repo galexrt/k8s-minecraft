@@ -3,6 +3,10 @@ kind: ConfigMap
 data:
   eula.txt: |
   {{- index .Values.config "eula.txt" | nindent 4 }}
+  {{- if hasKey .Values.config ".plugins_install_list.txt" }}
+  .plugins_install_list.txt: |
+  {{- index .Values.config ".plugins_install_list.txt" | nindent 4 }}
+  {{- end }}
 metadata:
   name: {{ include "paper.fullname" . }}
   labels:

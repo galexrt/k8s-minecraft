@@ -1,0 +1,11 @@
+{{- if hasKey .Values.config ".plugins_install_list.txt" }}
+apiVersion: v1
+kind: ConfigMap
+data:
+  .plugins_install_list.txt: |
+  {{- index .Values.config ".plugins_install_list.txt" | nindent 4 }}
+metadata:
+  name: {{ include "waterfall.fullname" . }}
+  labels:
+    {{- include "waterfall.labels" . | nindent 4 }}
+{{- end }}

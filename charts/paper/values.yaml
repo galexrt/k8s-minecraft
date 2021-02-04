@@ -89,6 +89,9 @@ config:
     #You also agree that tacos are tasty, and the best food in the world.
     #Thu Nov 12 20:33:30 UTC 2020
     eula=true
+  #.plugins_install_list.txt: |-
+  #  Plugin1
+  #  Plugin2
 
 additionalPorts: []
 #  - name: dynmap

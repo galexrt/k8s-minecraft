@@ -60,6 +60,9 @@ spec:
             - name: server-data
               mountPath: /data
               readOnly: false
+            - name: mc-pluginsinstall-txt
+              mountPath: /data/.plugins_install_list.txt
+              readOnly: true
             {{- with .Values.additionalVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -89,6 +92,14 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+      {{- if hasKey .Values.config ".plugins_install_list.txt" }}
+        - name: mc-pluginsinstall-txt
+          configMap:
+            name: {{ include "waterfall.fullname" . }}
+            items:
+            - key: .plugins_install_list.txt
+              path: .plugins_install_list.txt
+        {{- end }}
       {{- with .Values.additionalVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

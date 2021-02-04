@@ -115,3 +115,8 @@ additionalContainers: []
 
 # Not a nice "hack", but better than having some additional YAMLs to apply
 additionalObjects: []
+
+config: {}
+  #.plugins_install_list.txt: |-
+  #  Plugin1
+  #  Plugin2
