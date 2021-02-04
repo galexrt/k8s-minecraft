@@ -64,9 +64,11 @@ spec:
               mountPath: /data/eula.txt
               subPath: eula.txt
               readOnly: true
+            {{- if hasKey .Values.config ".plugins_install_list.txt" }}
             - name: mc-pluginsinstall-txt
               mountPath: /data/.plugins_install_list.txt
               readOnly: true
+            {{- end }}
             {{- with .Values.additionalVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -80,6 +82,35 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+        {{- if hasKey .Values.config ".plugins_install_list.txt" }}
+        - name: pluginswatcher
+          env:
+          {{ range $k, $v := .Values.additionalEnv }}
+            - name: {{ $k | quote }}
+              value: {{ $v | quote }}
+          {{- end }}
+            - name: GAMESERVER_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            requests:
+              cpu: 25m
+              memory: 35Mi
+            limits:
+              memory: 350Mi
+          volumeMounts:
+            - name: server-data
+              mountPath: /data
+              readOnly: false
+            - name: mc-pluginsinstall-txt
+              mountPath: /data/.plugins_install_list.txt
+              readOnly: true
+        {{- end }}
         {{- with .Values.additionalContainers }}
           {{- toYaml . | nindent 8 }}
         {{- end }}

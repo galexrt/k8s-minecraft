@@ -22,12 +22,20 @@ if [ -z "${PLUGINS_TO_INSTALL}" ]; then
 fi
 
 while IFS= read -r plugin; do
-    echo "Copying plugin data ${plugin} to server ..."
-    if [ ! -d "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}" ]; then
-        echo "ERROR: Failed to find ${plugin} dir in ${CUSTOM_SCRIPT_PLUGINS_DIR}. Exiting ..."
+    n=0
+    until [ "$n" -ge 3 ]; do
+        if [ -d "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}" ]; then
+            echo "Copying plugin data ${plugin} to server (try $n/3) ..."
+            # shellcheck disable=SC2145,SC2086
+            rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}/" /data/plugins/ && break
+        else
+            n=$((n+1))
+            echo "ERROR: Failed to find ${plugin} dir in ${CUSTOM_SCRIPT_PLUGINS_DIR} (try $n/3). Sleeping 30 seconds ..."
+            sleep 30
+        fi
+    done
+    if [ "$n" -ge 3 ]; then
+        echo "ERROR: Failed to install ${plugin} (no dir found). Exiting 1 ..."
         exit 1
     fi
-
-    # shellcheck disable=SC2145,SC2086
-    rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}/" /data/plugins/
 done < <(printf '%s\n' "${PLUGINS_TO_INSTALL}")

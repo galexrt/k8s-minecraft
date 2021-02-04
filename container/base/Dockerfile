@@ -13,7 +13,7 @@ RUN dnf upgrade -y && \
     dnf install -y \
         java-11-openjdk wget procps net-tools findutils \
         glibc-locale-source glibc-langpack-en libwebp-tools \
-        rsync && \
+        rsync inotify-tools && \
     dnf clean all && \
     localedef --quiet --force -i en_US -f UTF-8 "$LANG" && \
     mkdir -p "$DATA_DIR" /custom_data /custom_scripts && \
