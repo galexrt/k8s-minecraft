@@ -24,5 +24,5 @@ while IFS= read -r plugin; do
     fi
 
     # shellcheck disable=SC2145,SC2086
-    rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}" /data/plugins
+    rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}/" /data/plugins/
 done < <(sed '/^$/d' "/data/.plugins_install_list.txt")
