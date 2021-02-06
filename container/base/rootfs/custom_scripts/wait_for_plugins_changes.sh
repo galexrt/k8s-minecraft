@@ -5,7 +5,6 @@ export PLUGINS_TO_INSTALL=""
 unset PLUGINS_TO_INSTALL
 
 inotifywait \
-    --verbose \
     --event modify \
     --event attrib \
     --event close_write \
