@@ -27,7 +27,7 @@ while true; do
     # Update plugins list checksum on change
     PLUGINS_LIST_CHECKSUM="${PLUGINS_LIST_CHECKSUM_NEW}"
 
-    echo "$(date) Plugins install list has been updated. Triggering plugin installation scripts ..."
+    echo "$(date) Plugins install list has been updated (checksum: ${PLUGINS_LIST_CHECKSUM_NEW}). Triggering plugin installation scripts ..."
     /custom_scripts/pre/jars-removal.sh
     /custom_scripts/pre/plugins-install.sh
     echo "$(date) Plugins install from list completed."
