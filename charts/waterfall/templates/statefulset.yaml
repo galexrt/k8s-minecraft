@@ -108,6 +108,9 @@ spec:
             - name: mc-pluginsinstall-txt
               mountPath: /plugins_install_list
               readOnly: true
+            {{- with .Values.additionalVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
         {{- end }}
         {{- with .Values.additionalContainers }}
           {{- toYaml . | nindent 8 }}
