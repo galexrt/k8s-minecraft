@@ -6,13 +6,11 @@ unset PLUGINS_TO_INSTALL
 
 inotifywait \
     --event modify \
-    --event attrib \
     --event close_write \
-    --event close_nowrite \
     --event close \
     --event move_self \
     --monitor \
-    /data/.plugins_install_list.txt | \
+    /plugins_install_list/plugins_install_list.txt | \
 while read -r filename; do
     # TODO Future "debounce" by killing the background job
     #jobs -p | xargs kill -9

@@ -11,14 +11,14 @@ if [ "${CUSTOM_SCRIPT_PLUGINS_INSTALL}" != "true" ]; then
     exit
 fi
 
-if [ ! -f "/data/.plugins_install_list.txt" ] || [ -z "${PLUGINS_TO_INSTALL}" ]; then
-    echo "No .plugins_install_list.txt found and empty PLUGINS_TO_INSTALL env var, skipping plugins install ..."
+if [ ! -f "/plugins_install_list/plugins_install_list.txt" ] || [ -z "${PLUGINS_TO_INSTALL}" ]; then
+    echo "No plugins_install_list.txt found and empty PLUGINS_TO_INSTALL env var, skipping plugins install ..."
     exit
 fi
 
 # When the env var is empty, read the plugins list file
 if [ -z "${PLUGINS_TO_INSTALL}" ]; then
-    PLUGINS_TO_INSTALL="$(sed '/^$/d' "/data/.plugins_install_list.txt")"
+    PLUGINS_TO_INSTALL="$(sed '/^$/d' "/plugins_install_list/plugins_install_list.txt")"
 fi
 
 while IFS= read -r plugin; do

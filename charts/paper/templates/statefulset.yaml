@@ -64,9 +64,9 @@ spec:
               mountPath: /data/eula.txt
               subPath: eula.txt
               readOnly: true
-            {{- if hasKey .Values.config ".plugins_install_list.txt" }}
+            {{- if hasKey .Values.config "plugins_install_list.txt" }}
             - name: mc-pluginsinstall-txt
-              mountPath: /data/.plugins_install_list.txt
+              mountPath: /plugins_install_list
               readOnly: true
             {{- end }}
             {{- with .Values.additionalVolumeMounts }}
@@ -82,7 +82,7 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-        {{- if hasKey .Values.config ".plugins_install_list.txt" }}
+        {{- if hasKey .Values.config "plugins_install_list.txt" }}
         - name: pluginswatcher
           args:
             - /custom_scripts/wait_for_plugins_changes.sh
@@ -110,7 +110,7 @@ spec:
               mountPath: /data
               readOnly: false
             - name: mc-pluginsinstall-txt
-              mountPath: /data/.plugins_install_list.txt
+              mountPath: /plugins_install_list
               readOnly: true
         {{- end }}
         {{- with .Values.additionalContainers }}
@@ -135,13 +135,13 @@ spec:
             items:
             - key: eula.txt
               path: eula.txt
-        {{- if hasKey .Values.config ".plugins_install_list.txt" }}
+        {{- if hasKey .Values.config "plugins_install_list.txt" }}
         - name: mc-pluginsinstall-txt
           configMap:
             name: {{ include "paper.fullname" . }}
             items:
-            - key: .plugins_install_list.txt
-              path: .plugins_install_list.txt
+            - key: plugins_install_list.txt
+              path: plugins_install_list.txt
         {{- end }}
       {{- with .Values.additionalVolumes }}
         {{- toYaml . | nindent 8 }}
