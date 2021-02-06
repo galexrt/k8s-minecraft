@@ -3,6 +3,7 @@
 set -e
 
 CUSTOM_SCRIPT_PLUGINS_INSTALL="${CUSTOM_SCRIPT_PLUGINS_INSTALL:-false}"
+CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE="${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE:-/plugins_install_list/plugins_install_list.txt}"
 CUSTOM_SCRIPT_PLUGINS_DIR="${CUSTOM_SCRIPT_PLUGINS_DIR:-/repo/plugins}"
 RSYNC_FLAGS="${RSYNC_FLAGS:--aurv}"
 
@@ -11,14 +12,14 @@ if [ "${CUSTOM_SCRIPT_PLUGINS_INSTALL}" != "true" ]; then
     exit
 fi
 
-if [ ! -f "/plugins_install_list/plugins_install_list.txt" ] || [ -z "${PLUGINS_TO_INSTALL}" ]; then
-    echo "No plugins_install_list.txt found and empty PLUGINS_TO_INSTALL env var, skipping plugins install ..."
+if [ ! -e "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}" ] || [ -z "${PLUGINS_TO_INSTALL}" ]; then
+    echo "No ${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE} found and empty PLUGINS_TO_INSTALL env var, skipping plugins install ..."
     exit
 fi
 
 # When the env var is empty, read the plugins list file
 if [ -z "${PLUGINS_TO_INSTALL}" ]; then
-    PLUGINS_TO_INSTALL="$(sed '/^$/d' "/plugins_install_list/plugins_install_list.txt")"
+    PLUGINS_TO_INSTALL="$(sed '/^$/d' "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
 fi
 
 while IFS= read -r plugin; do

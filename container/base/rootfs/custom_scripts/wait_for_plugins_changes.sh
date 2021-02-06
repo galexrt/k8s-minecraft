@@ -4,24 +4,27 @@
 export PLUGINS_TO_INSTALL=""
 unset PLUGINS_TO_INSTALL
 
-inotifywait \
-    --event modify \
-    --event close_write \
-    --event close \
-    --event move_self \
-    --monitor \
-    /plugins_install_list/plugins_install_list.txt | \
-while read -r filename; do
-    # TODO Future "debounce" by killing the background job
-    #jobs -p | xargs kill -9
-    wait
-    (
-        sleep 3
-        echo "$(date) Plugins install list (${filename}) has been updated. Triggering plugin installation scripts ..."
-        echo "Removing Jars before plugin install ..."
-        /custom_scripts/pre/jars-removal.sh
-        echo "Installing plugins from list ..."
-        /custom_scripts/pre/plugins-install.sh
-        echo "$(date) Plugins install from list completed."
-    ) &
+# Must be kept in sync with the `pre/plugins-install.sh` script
+CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE="${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE:-/plugins_install_list/plugins_install_list.txt}"
+
+PLUGINS_LIST_CHECKSUM="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
+
+while true; do
+    sleep 10
+    if [ ! -e "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}" ]; then
+        echo "$(date) Unable to find plugin install list, sleeping again ..."
+        continue
+    fi
+
+    PLUGINS_LIST_CHECKSUM_NEW="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
+    if [ "${PLUGINS_LIST_CHECKSUM}" = "${PLUGINS_LIST_CHECKSUM_NEW}"  ]; then
+        continue
+    fi
+    # Update plugins list checksum on change
+    PLUGINS_LIST_CHECKSUM="${PLUGINS_LIST_CHECKSUM_NEW}"
+
+    echo "$(date) Plugins install list has been updated. Triggering plugin installation scripts ..."
+    /custom_scripts/pre/jars-removal.sh
+    /custom_scripts/pre/plugins-install.sh
+    echo "$(date) Plugins install from list completed."
 done
