@@ -80,7 +80,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
         {{- if hasKey .Values.config "plugins_install_list.txt" }}
         - name: pluginswatcher
-          args:
+          command:
             - /custom_scripts/wait_for_plugins_changes.sh
           env:
           {{ range $k, $v := .Values.additionalEnv }}
