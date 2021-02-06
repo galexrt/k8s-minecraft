@@ -27,7 +27,7 @@ while true; do
     sleep "${PLUGINS_INSTALL_SLEEP_TIME}"
 
     # Every 7.5 minutes (45 loops * 10 seconds sleep)
-    if [ "${resync_loop_count}" -le 45 ]; then
+    if [ "${resync_loop_count}" -ge 45 ]; then
         echo "$(date) Plugin resync loop triggered."
         plugins_install
         continue
