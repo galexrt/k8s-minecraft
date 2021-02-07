@@ -1,5 +1,11 @@
 #!/bin/bash
 
+cleanup() {
+    kill -s SIGTERM $!
+    exit 0
+}
+trap cleanup SIGINT SIGTERM
+
 plugins_install() {
     echo "$(date) Plugins install list has been updated (checksum: ${PLUGINS_LIST_CHECKSUM_NEW}). Triggering plugin installation scripts ..."
     /custom_scripts/pre/jars-removal.sh
