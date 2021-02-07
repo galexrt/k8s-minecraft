@@ -23,8 +23,8 @@ if [ -z "${PLUGINS_TO_INSTALL}" ]; then
 fi
 
 while IFS= read -r plugin; do
-    n=0
-    until [ "$n" -ge 3 ]; do
+    n=1
+    until [ "$n" -gt 3 ]; do
         if [ -d "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}" ]; then
             echo "Copying plugin data ${plugin} to server (try $n/3) ..."
             # shellcheck disable=SC2145,SC2086

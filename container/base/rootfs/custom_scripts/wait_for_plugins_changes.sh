@@ -30,6 +30,7 @@ while true; do
     if [ "${resync_loop_count}" -ge 45 ]; then
         echo "$(date) Plugin resync loop triggered."
         plugins_install
+        resync_loop_count=1
         continue
     fi
 
