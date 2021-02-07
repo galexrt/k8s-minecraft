@@ -4,7 +4,8 @@ set -e
 
 POD_HOSTNAME="$(cat /etc/hostname)"
 POD_ID="$(echo "${POD_HOSTNAME}" | rev | cut -d'-' -f1 | rev)"
-echo "POD_ID is: ${POD_ID}"
+POD_ID_PLUS="$(( POD_ID + 1 ))"
+echo "POD_ID is: ${POD_ID} (+1 is ${POD_ID_PLUS})"
 # This assumes the databases are named `mc_POD_HOSTNAME`
 GAMESERVER_MYSQL_SPECIFIC_DBNAME="${GAMESERVER_MYSQL_SPECIFIC_DBNAME:-mc_${POD_HOSTNAME//-/_}}"
 GAMESERVER_POD_HOSTNAME="${GAMESERVER_POD_HOSTNAME:-${POD_HOSTNAME}}"
@@ -36,7 +37,11 @@ for var in "${!GAMESERVER_@}"; do
         \) | \
             while IFS= read -r -d '' file; do
                 value="${!var}"
+                # In value replacements are done here
                 value="${value//\%POD_ID\%/${POD_ID}}"
+                value="${value//\%POD_ID_PLUS\%/${POD_ID_PLUS}}"
+
+                # Sed replacement
                 sed -i 's#${'"${var}"'}#'"${value}"'#g' "${file}"
             done
 done
