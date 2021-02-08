@@ -29,11 +29,13 @@ while IFS= read -r plugin; do
             echo "Copying plugin data ${plugin} to server (try $n/3) ..."
             # shellcheck disable=SC2145,SC2086
             rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}/" /data/plugins/ && break
+            echo "ERROR: Failed to copy ${plugin} data to server (try $n/3). Sleeping 5 seconds ..."
+            sleep 5
         else
-            n=$((n+1))
-            echo "ERROR: Failed to find ${plugin} dir in ${CUSTOM_SCRIPT_PLUGINS_DIR} (try $n/3). Sleeping 30 seconds ..."
-            sleep 30
+            echo "ERROR: Failed to find ${plugin} dir in ${CUSTOM_SCRIPT_PLUGINS_DIR} (try $n/3). Sleeping 20 seconds ..."
+            sleep 20
         fi
+        n=$(( n + 1 ))
     done
     if [ "$n" -ge 3 ]; then
         echo "ERROR: Failed to install ${plugin} (no dir found). Exiting 1 ..."

@@ -39,6 +39,7 @@ podAnnotations: {}
 
 podSecurityContext:
   fsGroup: 1337
+  fsGroupChangePolicy: "OnRootMismatch"
 
 securityContext: {}
   # capabilities:
