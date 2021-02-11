@@ -20,6 +20,5 @@ if [ -d "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME}/${POD_HOSTNAME}" ]; 
     echo "ERROR: Failed to copy ${POD_HOSTNAME} server config data to server. Sleeping 5 seconds ..."
     sleep 5
 else
-    echo "ERROR: Failed to find ${POD_HOSTNAME} server config data dir in ${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME}/. Sleeping 20 seconds ..."
-    sleep 20
+    echo "Skipping ${POD_HOSTNAME} server config data install, no dir found in ${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME}/${POD_HOSTNAME}/ ..."
 fi
