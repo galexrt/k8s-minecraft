@@ -13,11 +13,18 @@ if [ "${CUSTOM_SCRIPT_SERVER_CONFIGS_INSTALL}" != "true" ]; then
     exit
 fi
 
+if [ -d "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME}/data" ]; then
+    echo "Copying ${POD_HOSTNAME} server config data to server ..."
+    # shellcheck disable=SC2145,SC2086
+    rsync --dry-run ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME}/data/" /data/
+else
+    echo "Skipping ${SERVER_NAME} server config data install, no dir found in ${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME}/data/ ..."
+fi
+
 if [ -d "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME}/${POD_HOSTNAME}" ]; then
     echo "Copying ${POD_HOSTNAME} server config data to server ..."
     # shellcheck disable=SC2145,SC2086
     rsync --dry-run ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME}/${POD_HOSTNAME}/" /data/
-    echo "ERROR: Failed to copy ${POD_HOSTNAME} server config data to server. Sleeping 5 seconds ..."
     sleep 5
 else
     echo "Skipping ${POD_HOSTNAME} server config data install, no dir found in ${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME}/${POD_HOSTNAME}/ ..."
