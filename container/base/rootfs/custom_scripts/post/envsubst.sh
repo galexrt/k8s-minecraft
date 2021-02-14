@@ -35,7 +35,8 @@ find /data/*.yml /data/plugins \
     \) | \
         while IFS= read -r -d '' file; do
             # If file doesn't contain any `GAMESERVER_*` vars, skip it early
-            if ! grep --quiet "\${GAMESERVER_*}" "${file}" > /dev/null 2>&1; then
+            # shellcheck disable=SC2016
+            if ! grep --quiet '\${GAMESERVER_.+}' "${file}" > /dev/null 2>&1; then
                 continue
             fi
             for var in "${!GAMESERVER_@}"; do
