@@ -10,6 +10,7 @@ plugins_install() {
     echo "$(date) Plugins install list has been updated (checksum: ${PLUGINS_LIST_CHECKSUM_NEW}). Triggering plugin installation scripts ..."
     /custom_scripts/pre/jars-removal.sh
     /custom_scripts/pre/plugins-install.sh
+    /custom_scripts/pre/server-base-install.sh
     /custom_scripts/pre/server-configs-install.sh
 
     /custom_scripts/post/envsubst.sh
