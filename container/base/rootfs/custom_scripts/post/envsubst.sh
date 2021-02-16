@@ -46,7 +46,7 @@ find /data/*.yml /data/plugins \
                 value="${value//\%POD_ID_PLUS\%/${POD_ID_PLUS}}"
 
                 echo "Replacing ${var} in ${file} ..."
-                sed -i 's#${'"${var}"'}#'"${value}"'#g' "${file}"
+                sed -i 's~${'"${var}"'}~'"${value}"'~g' "${file}"
             done
         done
 
