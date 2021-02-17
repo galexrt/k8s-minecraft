@@ -39,13 +39,13 @@ find /data/*.yml /data/plugins \
             if ! grep --quiet --perl-regexp '\${GAMESERVER_.+}' "${file}" > /dev/null 2>&1; then
                 continue
             fi
+            echo "Replacing vars in ${file} ..."
             for var in "${!GAMESERVER_@}"; do
                 value="${!var}"
                 # In value replacements are done here
                 value="${value//\%POD_ID\%/${POD_ID}}"
                 value="${value//\%POD_ID_PLUS\%/${POD_ID_PLUS}}"
 
-                echo "Replacing ${var} in ${file} ..."
                 sed -i 's~${'"${var}"'}~'"${value}"'~g' "${file}"
             done
         done
