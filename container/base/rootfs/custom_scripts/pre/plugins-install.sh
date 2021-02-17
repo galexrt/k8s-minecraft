@@ -5,7 +5,7 @@ set -e
 CUSTOM_SCRIPT_PLUGINS_INSTALL="${CUSTOM_SCRIPT_PLUGINS_INSTALL:-false}"
 CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE="${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE:-/plugins_install_list/plugins_install_list.txt}"
 CUSTOM_SCRIPT_PLUGINS_DIR="${CUSTOM_SCRIPT_PLUGINS_DIR:-/repo/plugins}"
-RSYNC_FLAGS="${RSYNC_FLAGS:--aurv}"
+RSYNC_FLAGS="${RSYNC_FLAGS:---ignore-times --recursive --verbose}"
 
 if [ "${CUSTOM_SCRIPT_PLUGINS_INSTALL}" != "true" ]; then
     echo "Skipping plugins install from plugins directory."

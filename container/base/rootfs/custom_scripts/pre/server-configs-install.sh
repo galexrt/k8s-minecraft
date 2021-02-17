@@ -6,7 +6,7 @@ POD_HOSTNAME="$(cat /etc/hostname)"
 SERVER_NAME="${POD_HOSTNAME%-*}"
 CUSTOM_SCRIPT_SERVER_CONFIGS_INSTALL="${CUSTOM_SCRIPT_SERVER_CONFIGS_INSTALL:-false}"
 CUSTOM_SCRIPT_SERVER_CONFIGS_DIR="${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR:-/repo/servers}"
-RSYNC_FLAGS="${RSYNC_FLAGS:--aurv}"
+RSYNC_FLAGS="${RSYNC_FLAGS:---ignore-times --recursive --verbose}"
 
 if [ "${CUSTOM_SCRIPT_SERVER_CONFIGS_INSTALL}" != "true" ]; then
     echo "Skipping server config data install."
