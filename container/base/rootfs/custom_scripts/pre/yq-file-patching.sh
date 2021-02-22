@@ -5,6 +5,7 @@ set -e
 # shellcheck disable=SC1091
 source /custom_scripts/vars.sh
 
+echo "yq-file-patching: Running envsubst on config files ..."
 find /data/*.merge-patch.yml /data/plugins \
     \( \
         \( \
@@ -23,9 +24,12 @@ find /data/*.merge-patch.yml /data/plugins \
         \) -print0 \
     \) | \
         while IFS= read -r -d '' file; do
-        # shellcheck disable=SC2016
+            echo "yq-file-patching: Patching ${file} file ..."
+            # shellcheck disable=SC2016
             yq \
                 -i \
                 eval-all \
                 '. as $item ireduce ({}; . * $item )' "${file/.merge-patch/}" "${file}"
         done
+
+echo "yq-file-patching: Done yq-file-patching on config files ..."
