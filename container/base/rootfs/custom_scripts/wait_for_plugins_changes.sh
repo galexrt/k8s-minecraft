@@ -17,6 +17,7 @@ plugins_install() {
     /custom_scripts/pre/server-configs-install.sh
 
     /custom_scripts/post/envsubst.sh
+    /custom_scripts/post/yq-file-patching.sh
     echo "$(date) Plugins install from list completed."
 }
 
