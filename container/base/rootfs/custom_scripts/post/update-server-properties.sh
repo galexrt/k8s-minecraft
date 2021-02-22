@@ -2,6 +2,9 @@
 
 set -e
 
+# shellcheck disable=SC1091
+source /custom_scripts/vars.sh
+
 SERVER_PROPERTIES_FILE="${SERVER_PROPERTIES_FILE:-/data/server.properties}"
 SERVER_PROPERTIES_TWEAKS_FILE="${SERVER_PROPERTIES_TWEAKS_FILE:-/data/server-props-tweaks.properties}"
 

@@ -2,9 +2,9 @@
 
 set -e
 
-POD_HOSTNAME="$(cat /etc/hostname)"
-POD_ID="$(echo "${POD_HOSTNAME}" | rev | cut -d'-' -f1 | rev)"
-POD_ID_PLUS="$(( POD_ID + 1 ))"
+# shellcheck disable=SC1091
+source /custom_scripts/vars.sh
+
 echo "POD_ID is: ${POD_ID} (+1 is ${POD_ID_PLUS})"
 # This assumes the databases are named `mc_POD_HOSTNAME`
 GAMESERVER_MYSQL_SPECIFIC_DBNAME="${GAMESERVER_MYSQL_SPECIFIC_DBNAME:-mc_${POD_HOSTNAME//-/_}}"

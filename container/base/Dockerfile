@@ -4,7 +4,9 @@ ENV HOME="/minecraft" \
     DATA_DIR="/data" \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US" \
-    LC_ALL="en_US.UTF-8"
+    LC_ALL="en_US.UTF-8" \
+    YQ_VERSION="v4.6.0" \
+    YQ_BINARY="yq_linux_amd64"
 
 COPY rootfs /
 
@@ -13,9 +15,12 @@ RUN dnf upgrade -y && \
     dnf install -y \
         java-11-openjdk wget procps net-tools findutils \
         glibc-locale-source glibc-langpack-en libwebp-tools \
-        rsync inotify-tools && \
+        rsync inotify-tools tar && \
     dnf clean all && \
     localedef --quiet --force -i en_US -f UTF-8 "$LANG" && \
+    wget -q "https://github.com/mikefarah/yq/releases/download/${VERSION}/${YQ_BINARY}.tar.gz" -O - | tar xz && \
+    mv "${YQ_BINARY}" /usr/bin/yq && \
+    chmod 755 /usr/bin/yq && \
     mkdir -p "$DATA_DIR" /custom_data /custom_scripts && \
     groupadd \
         --gid 1337 \

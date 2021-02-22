@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# shellcheck disable=SC1091
+source /custom_scripts/vars.sh
+
 cleanup() {
     kill -s SIGTERM $!
     exit 0

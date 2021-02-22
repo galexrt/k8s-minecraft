@@ -2,9 +2,11 @@
 
 set -e
 
+# shellcheck disable=SC1091
+source /custom_scripts/vars.sh
+
 CUSTOM_SCRIPT_SERVER_BASE_INSTALL="${CUSTOM_SCRIPT_SERVER_BASE_INSTALL:-false}"
 CUSTOM_SCRIPT_SERVER_BASE_DIR="${CUSTOM_SCRIPT_SERVER_BASE_DIR:-/repo/servers-base}"
-RSYNC_FLAGS="${RSYNC_FLAGS:---ignore-times --recursive --verbose}"
 
 if [ "${CUSTOM_SCRIPT_SERVER_BASE_INSTALL}" != "true" ]; then
     echo "Skipping server base install."
