@@ -5,7 +5,7 @@ set -e
 # shellcheck disable=SC1091
 source /custom_scripts/vars.sh
 
-find /data/*.yml /data/plugins \
+find /data/*.merge-patch.yml /data/plugins \
     \( \
         \( \
             \( \
