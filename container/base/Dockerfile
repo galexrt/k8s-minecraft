@@ -18,7 +18,7 @@ RUN dnf upgrade -y && \
         rsync inotify-tools tar && \
     dnf clean all && \
     localedef --quiet --force -i en_US -f UTF-8 "$LANG" && \
-    wget -q "https://github.com/mikefarah/yq/releases/download/${VERSION}/${YQ_BINARY}.tar.gz" -O - | tar xz && \
+    wget -q "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${YQ_BINARY}.tar.gz" -O - | tar xz && \
     mv "${YQ_BINARY}" /usr/bin/yq && \
     chmod 755 /usr/bin/yq && \
     mkdir -p "$DATA_DIR" /custom_data /custom_scripts && \
