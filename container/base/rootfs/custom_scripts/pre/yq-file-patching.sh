@@ -23,6 +23,7 @@ find /data/*.merge-patch.yml /data/plugins \
         \) -print0 \
     \) | \
         while IFS= read -r -d '' file; do
+        # shellcheck disable=SC2016
             yq \
                 -i \
                 eval-all \
