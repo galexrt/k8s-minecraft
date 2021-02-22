@@ -6,7 +6,9 @@ set -e
 source /custom_scripts/vars.sh
 
 echo "yq-file-patching: Running envsubst on config files ..."
-find /data/*.merge-patch.yml /data/plugins \
+DATA_PATCH_FILES=(/data/*.merge-patch.yml)
+
+find /data/plugins "${DATA_PATCH_FILES[@]}" \
     \( \
         \( \
             \( \
