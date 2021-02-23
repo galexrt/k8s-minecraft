@@ -1,6 +1,9 @@
 #!/bin/bash
 
-set -e
+# Only fail on errors when it is not the first startup
+if [ "${FIRST_STARTUP}" = "false" ]; then
+    set -e
+fi
 
 # shellcheck disable=SC1091
 source /custom_scripts/vars.sh

@@ -4,6 +4,12 @@ RSYNC_FLAGS="${RSYNC_FLAGS:---ignore-times --recursive --verbose}"
 JAVA_JAR="${JAVA_JAR:-}"
 JAVA_FLAGS="${JAVA_FLAGS:-}"
 
+export FIRST_STARTUP="${FIRST_STARTUP:-false}"
+
+if [ -f "/data/.first_startup_complete" ]; then
+    export FIRST_STARTUP="true"
+fi
+
 if [ -d /custom_scripts/pre/ ]; then
     for f in /custom_scripts/pre/*.sh; do
         echo "Running pre custom_script ${f} ..."
@@ -25,6 +31,11 @@ if [ -d /custom_scripts/post/ ]; then
         bash "${f}" || { echo "post custom_script ${f} failed. Exiting ..."; exit 1; }
         echo "Done. Ran post custom_script ${f}."
     done
+fi
+
+# Add first startup tag file
+if [ "${FIRST_STARTUP}" = "false" ]; then
+    date +%s > /data/.first_startup_complete
 fi
 
 if [ "${1}" = "java" ]; then
