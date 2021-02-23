@@ -6,14 +6,21 @@ JAVA_FLAGS="${JAVA_FLAGS:-}"
 
 export FIRST_STARTUP="${FIRST_STARTUP:-false}"
 
-if [ -f "/data/.first_startup_complete" ]; then
+if [ ! -f "/data/.first_startup_complete" ]; then
+    echo "First start detected! Setting FIRST_STARTUP=true ..."
     export FIRST_STARTUP="true"
 fi
 
 if [ -d /custom_scripts/pre/ ]; then
     for f in /custom_scripts/pre/*.sh; do
         echo "Running pre custom_script ${f} ..."
-        bash "${f}" || { echo "pre custom_script ${f} failed. Exiting ..."; exit 1; }
+        bash "${f}" || {
+            if [ "${FIRST_STARTUP}" = "true" ]; then
+                echo "Ignoring pre custom_script ${f} failure."; return;
+            fi;
+            echo "pre custom_script ${f} failed. Exiting ...";
+            exit 1;
+        }
         echo "Done. Ran pre custom_script ${f}."
     done
 fi
@@ -28,14 +35,21 @@ fi
 if [ -d /custom_scripts/post/ ]; then
     for f in /custom_scripts/post/*.sh; do
         echo "Running post custom_script ${f} ..."
-        bash "${f}" || { echo "post custom_script ${f} failed. Exiting ..."; exit 1; }
+        bash "${f}" || {
+            if [ "${FIRST_STARTUP}" = "true" ]; then
+                echo "Ignoring post custom_script ${f} failure."; return;
+            fi;
+            echo "post custom_script ${f} failed. Exiting ...";
+            exit 1;
+        }
         echo "Done. Ran post custom_script ${f}."
     done
 fi
 
 # Add first startup tag file
-if [ "${FIRST_STARTUP}" = "false" ]; then
+if [ "${FIRST_STARTUP}" = "true" ]; then
     date +%s > /data/.first_startup_complete
+    echo "First start complete!"
 fi
 
 if [ "${1}" = "java" ]; then
