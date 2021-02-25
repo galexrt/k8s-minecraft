@@ -13,19 +13,19 @@ if [ "${CUSTOM_SCRIPT_SERVER_CONFIGS_INSTALL}" != "true" ]; then
     exit
 fi
 
-if [ -d "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME_WITHOUT_NUMBER}/data" ]; then
-    echo "Copying ${SERVER_NAME_WITHOUT_NUMBER}/data server config data to server ..."
+if [ -d "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${GAMESERVER_SERVER_NAME_WONUM}/data" ]; then
+    echo "Copying ${GAMESERVER_SERVER_NAME_WONUM}/data server config data to server ..."
     # shellcheck disable=SC2145,SC2086
-    rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME_WITHOUT_NUMBER}/data/" /data/
+    rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${GAMESERVER_SERVER_NAME_WONUM}/data/" /data/
 else
-    echo "Skipping ${SERVER_NAME_WITHOUT_NUMBER}/data server config data install, no dir found in ${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME_WITHOUT_NUMBER}/data/ ..."
+    echo "Skipping ${GAMESERVER_SERVER_NAME_WONUM}/data server config data install, no dir found in ${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${GAMESERVER_SERVER_NAME_WONUM}/data/ ..."
 fi
 
-if [ -d "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME_WITHOUT_NUMBER}/${POD_HOSTNAME}" ]; then
+if [ -d "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${GAMESERVER_SERVER_NAME_WONUM}/${POD_HOSTNAME}" ]; then
     echo "Copying ${POD_HOSTNAME} server config data to server ..."
     # shellcheck disable=SC2145,SC2086
-    rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME_WITHOUT_NUMBER}/${POD_HOSTNAME}/" /data/
+    rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${GAMESERVER_SERVER_NAME_WONUM}/${POD_HOSTNAME}/" /data/
     sleep 5
 else
-    echo "Skipping ${POD_HOSTNAME} server config data install, no dir found in ${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${SERVER_NAME_WITHOUT_NUMBER}/${POD_HOSTNAME}/ ..."
+    echo "Skipping ${POD_HOSTNAME} server config data install, no dir found in ${CUSTOM_SCRIPT_SERVER_CONFIGS_DIR}/${GAMESERVER_SERVER_NAME_WONUM}/${POD_HOSTNAME}/ ..."
 fi

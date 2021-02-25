@@ -8,7 +8,6 @@ source /custom_scripts/vars.sh
 echo "POD_ID is: ${POD_ID} (+1 is ${POD_ID_PLUS})"
 # This assumes the databases are named `mc_POD_HOSTNAME`
 GAMESERVER_MYSQL_SPECIFIC_DBNAME="${GAMESERVER_MYSQL_SPECIFIC_DBNAME:-mc_${POD_HOSTNAME//-/_}}"
-GAMESERVER_POD_HOSTNAME="${GAMESERVER_POD_HOSTNAME:-${POD_HOSTNAME}}"
 GAMESERVER_SERVER_TYPE="${GAMESERVER_SERVER_TYPE:-unset}"
 
 echo "envsubst: Running envsubst on config files ..."
