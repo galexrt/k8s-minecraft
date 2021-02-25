@@ -3,6 +3,7 @@
 RSYNC_FLAGS="${RSYNC_FLAGS:---ignore-times --recursive --verbose}"
 JAVA_JAR="${JAVA_JAR:-}"
 JAVA_FLAGS="${JAVA_FLAGS:-}"
+RESTART_JAVA_PROCESS="${RESTART_JAVA_PROCESS:-true}"
 
 export FIRST_STARTUP="${FIRST_STARTUP:-false}"
 
@@ -67,9 +68,28 @@ if [ "${1}" = "java" ]; then
         set -- ${JAVA_FLAGS} "$@"
     fi
 
-    echo "Running java command:"
+    # Set Java PID to the script till the PID is set
+    java_pid="$$"
+    cleanup() {
+        kill -s SIGTERM "${java_pid}"
+        exit 0
+    }
+    trap cleanup SIGINT SIGTERM
+
     set -x
-    exec /usr/bin/java "${@}"
+    while true; do
+        echo "$(date) Running java command:"
+        /usr/bin/java "${@}" < /dev/stdin &
+        java_pid=$!
+
+        wait "${java_pid}"
+        rt=$?
+        if [ "${RESTART_JAVA_PROCESS}" != "true" ]; then
+            echo "$(date) Java program exited with code ${rt}, terminating script."
+            exit ${rt}
+        fi
+        echo "$(date) Java program exited with code ${rt}, restarting ..."
+    done
 fi
 
 echo "Running arbitrary command ..."
