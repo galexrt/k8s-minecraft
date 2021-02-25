@@ -73,6 +73,8 @@ if [ "${1}" = "java" ]; then
     cleanup() {
         kill -s SIGTERM "${java_pid}"
         wait "${java_pid}"
+        echo "Cleanup trap completed."
+        exit 0
     }
     trap cleanup SIGINT SIGTERM
 
