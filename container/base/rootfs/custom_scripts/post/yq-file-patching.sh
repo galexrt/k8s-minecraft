@@ -9,7 +9,7 @@ fi
 source /custom_scripts/vars.sh
 
 echo "yq-file-patching: Running envsubst on config files ..."
-DATA_PATCH_FILES=(/data/*.merge-patch.yml)
+DATA_PATCH_FILES=(/data/*.*-patch.yml)
 
 find /data/plugins "${DATA_PATCH_FILES[@]}" \
     \( \
@@ -38,7 +38,7 @@ find /data/plugins "${DATA_PATCH_FILES[@]}" \
             yq \
                 -i \
                 eval-all \
-                '. as $item ireduce ({}; . * $item )' "${file/.merge-patch/}" "${file}"
+                '. as $item ireduce ({}; . * $item )' "${file/.*-patch/}" "${file}"
         done
 
 echo "yq-file-patching: Done yq-file-patching on config files ..."
