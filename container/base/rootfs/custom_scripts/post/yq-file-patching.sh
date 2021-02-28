@@ -30,6 +30,10 @@ find /data/plugins "${DATA_PATCH_FILES[@]}" \
     \) | \
         while IFS= read -r -d '' file; do
             echo "yq-file-patching: Patching ${file} file ..."
+            if [ ! -f "${file/.merge-patch/}" ]; then
+                echo "yq-file-patching: File to patch doesn't exist, skipping ..."
+                continue
+            fi
             # shellcheck disable=SC2016
             yq \
                 -i \
