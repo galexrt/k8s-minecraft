@@ -19,16 +19,18 @@ plugins_install() {
 export PLUGINS_TO_INSTALL=""
 unset PLUGINS_TO_INSTALL
 
-CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME="${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME:-10}"
+CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME="${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME:-7}"
 CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC="${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC:-false}"
-# Every 7.5 minutes (45 loops * 10 seconds sleep)
-CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT_COUNT="${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT_COUNT:-45}"
+# After every 60 loops a full sync is done
+CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT_COUNT="${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT_COUNT:-60}"
 # Must be kept in sync with the `pre/plugins-install.sh` script
 CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE="${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE:-/plugins_install_list/plugins_install_list.txt}"
+CUSTOM_SCRIPT_PLUGINS_DIR="${CUSTOM_SCRIPT_PLUGINS_DIR:-/repo/plugins}"
 
 PLUGINS_LIST_CHECKSUM="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
+PLUGINS_DIR_REVISION="$(realpath "${CUSTOM_SCRIPT_PLUGINS_DIR}" | md5sum)"
 
-echo "Initial plugins list checksum ${PLUGINS_LIST_CHECKSUM}, starting loop with sleep ${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME} ..."
+echo "Initial plugins list checksum ${PLUGINS_LIST_CHECKSUM} and plugin dir revision ${PLUGINS_DIR_REVISION}, starting loop with sleep ${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME} ..."
 
 # Loop times after which a "resync" will be done
 resync_loop_count=1
@@ -52,11 +54,16 @@ while true; do
     fi
 
     PLUGINS_LIST_CHECKSUM_NEW="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
-    if [ "${PLUGINS_LIST_CHECKSUM}" = "${PLUGINS_LIST_CHECKSUM_NEW}"  ]; then
+    PLUGINS_DIR_REVISION_NEW="$(realpath "${CUSTOM_SCRIPT_PLUGINS_DIR}" | md5sum)"
+    if [ "${PLUGINS_LIST_CHECKSUM}" = "${PLUGINS_LIST_CHECKSUM_NEW}"  ] && [ "${PLUGINS_DIR_REVISION_NEW}" = "${PLUGINS_DIR_REVISION}" ]; then
         continue
     fi
-    # Update plugins list checksum on change
-    PLUGINS_LIST_CHECKSUM="${PLUGINS_LIST_CHECKSUM_NEW}"
 
+    # Update plugins on list file checksum change or when the dir path changed (e.g., git-sync)
+    PLUGINS_LIST_CHECKSUM="${PLUGINS_LIST_CHECKSUM_NEW}"
+    PLUGINS_DIR_REVISION="${PLUGINS_DIR_REVISION_NEW}"
+
+    sleep_time="$(shuf -i 0-12 -n 1)"
+    echo "Sleeping ${sleep_time} before running plugins_install scripts ..."
     plugins_install
 done
