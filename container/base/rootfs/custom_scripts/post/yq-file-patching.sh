@@ -23,14 +23,14 @@ find /data/plugins "${DATA_PATCH_FILES[@]}" \
        -o \( \
             -type f \
             -a \( \
-                \( -iname '*.merge-patch.yml' \) \
-                -o \( -iname '*.merge-patch.yaml' \) \
+                \( -iname '*.*-patch.yml' \) \
+                -o \( -iname '*.*-patch.yaml' \) \
             \) \
         \) -print0 \
     \) | \
         while IFS= read -r -d '' file; do
             echo "yq-file-patching: Patching ${file} file ..."
-            if [ ! -f "${file/.merge-patch/}" ]; then
+            if [ ! -f "${file/.*-patch/}" ]; then
                 echo "yq-file-patching: File to patch doesn't exist, skipping ..."
                 continue
             fi
