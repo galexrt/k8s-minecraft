@@ -3,15 +3,21 @@
 # shellcheck disable=SC1091
 source /custom_scripts/vars.sh
 
+SCRIPT_PID="$$"
+
 cleanup() {
-    kill -s SIGTERM $!
+    # Remove restart pause file
+    rm -f "${RESTART_PAUSE_FILE}"
+    kill -s SIGTERM "${SCRIPT_PID}"
     exit 0
 }
 trap cleanup SIGINT SIGTERM
 
 plugins_install() {
     echo "$(date) Plugins install list has been updated (checksum: ${PLUGINS_LIST_CHECKSUM_NEW}). Triggering plugin installation scripts ..."
+    echo "$(date) $0" > "${RESTART_PAUSE_FILE}"
     /custom_scripts/plugins_install.sh
+    rm -f "${RESTART_PAUSE_FILE}"
     echo "$(date) Plugins install from list completed."
 }
 

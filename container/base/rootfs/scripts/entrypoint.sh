@@ -4,6 +4,8 @@ RSYNC_FLAGS="${RSYNC_FLAGS:---ignore-times --recursive --verbose}"
 JAVA_JAR="${JAVA_JAR:-}"
 JAVA_FLAGS="${JAVA_FLAGS:-}"
 RESTART_JAVA_PROCESS="${RESTART_JAVA_PROCESS:-true}"
+RESTART_PAUSE_FILE="${RESTART_PAUSE_FILE:-/data/.pause_restart}"
+RESTART_PAUSE_CHECK_INTERVAL="${RESTART_PAUSE_CHECK_INTERVAL:-3}"
 
 export FIRST_STARTUP="${FIRST_STARTUP:-false}"
 
@@ -11,6 +13,9 @@ if [ ! -f "/data/.first_startup_complete" ]; then
     echo "First start detected! Setting FIRST_STARTUP=true ..."
     export FIRST_STARTUP="true"
 fi
+
+# Remove stale restart pause file
+rm -f "${RESTART_PAUSE_FILE}"
 
 if [ -d /custom_scripts/pre/ ]; then
     for f in /custom_scripts/pre/*.sh; do
@@ -91,9 +96,21 @@ if [ "${1}" = "java" ]; then
             exit ${rt}
         fi
         echo "$(date) Java program exited with code ${rt}, restarting ..."
+
+        if [ -e "${RESTART_PAUSE_FILE}" ]; then
+            echo "$(date) Restart pause file found (contents: '$(cat "${RESTART_PAUSE_FILE}")'), waiting ${RESTART_PAUSE_CHECK_INTERVAL} ..."
+            while true; do
+                sleep "${RESTART_PAUSE_CHECK_INTERVAL}"
+                if [ ! -e "${RESTART_PAUSE_FILE}" ]; then
+                    echo "$(date) Restart pause file not found (anymore), continuing restarting ..."
+                    break
+                fi
+                echo "$(date) Restart pause file found, waiting ${RESTART_PAUSE_CHECK_INTERVAL} ..."
+            done
+        fi
     done
 fi
 
-echo "Running arbitrary command ..."
+echo "$(date) Running arbitrary command ..."
 set -x
 exec "${@}"
