@@ -29,6 +29,7 @@ find /data/*.yml /data/plugins \
                 -o \( -iname '*.properties' \) \
                 -o \( -iname '*.conf' \) \
                 -o \( -iname '*.json' \) \
+                -o \( -iname '*.cm2' \) \
             \) \
         \) -print0 \
     \) | \
