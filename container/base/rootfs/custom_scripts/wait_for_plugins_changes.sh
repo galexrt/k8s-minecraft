@@ -36,7 +36,7 @@ CUSTOM_SCRIPT_PLUGINS_DIR="${CUSTOM_SCRIPT_PLUGINS_DIR:-/repo/plugins}"
 PLUGINS_LIST_CHECKSUM="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
 PLUGINS_DIR_REVISION="$(realpath "${CUSTOM_SCRIPT_PLUGINS_DIR}" | md5sum)"
 
-echo "Initial plugins list checksum ${PLUGINS_LIST_CHECKSUM} and plugin dir revision ${PLUGINS_DIR_REVISION}, starting loop with sleep ${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME} ..."
+echo "$(date) Initial plugins list checksum ${PLUGINS_LIST_CHECKSUM} and plugin dir revision ${PLUGINS_DIR_REVISION}, starting loop with sleep ${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME} ..."
 
 # Loop times after which a "resync" will be done
 resync_loop_count=1
@@ -70,6 +70,6 @@ while true; do
     PLUGINS_DIR_REVISION="${PLUGINS_DIR_REVISION_NEW}"
 
     sleep_time="$(shuf -i 0-12 -n 1)"
-    echo "Sleeping ${sleep_time} before running plugins_install scripts ..."
+    echo "$(date) Sleeping ${sleep_time} before running plugins_install scripts ..."
     plugins_install
 done
