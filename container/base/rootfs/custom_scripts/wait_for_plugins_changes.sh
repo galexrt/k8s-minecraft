@@ -66,10 +66,9 @@ while true; do
     fi
 
     # Update plugins on list file checksum change or when the dir path changed (e.g., git-sync)
-    PLUGINS_LIST_CHECKSUM="${PLUGINS_LIST_CHECKSUM_NEW}"
-    PLUGINS_DIR_REVISION="${PLUGINS_DIR_REVISION_NEW}"
-
     sleep_time="$(shuf -i 0-12 -n 1)"
     echo "$(date) Sleeping ${sleep_time} before running plugins_install scripts ..."
+    PLUGINS_LIST_CHECKSUM="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
+    PLUGINS_DIR_REVISION="$(realpath "${CUSTOM_SCRIPT_PLUGINS_DIR}" | md5sum)"
     plugins_install
 done
