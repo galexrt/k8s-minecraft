@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RSYNC_FLAGS="${RSYNC_FLAGS:---ignore-times --recursive --verbose}"
+RSYNC_FLAGS="${RSYNC_FLAGS:---ignore-times --recursive  --quiet}"
 JAVA_JAR="${JAVA_JAR:-}"
 JAVA_FLAGS="${JAVA_FLAGS:-}"
 RESTART_JAVA_PROCESS="${RESTART_JAVA_PROCESS:-true}"
