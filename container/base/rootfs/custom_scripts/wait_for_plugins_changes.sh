@@ -27,31 +27,30 @@ unset PLUGINS_TO_INSTALL
 
 CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME="${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME:-7}"
 CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC="${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC:-false}"
-# After every 90 loops a full sync is done
-CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT_COUNT="${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT_COUNT:-90}"
+# After roughly 900 seconds a full sync is run
+CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT="${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT:-900}"
 # Must be kept in sync with the `pre/plugins-install.sh` script
 CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE="${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE:-/plugins_install_list/plugins_install_list.txt}"
 CUSTOM_SCRIPT_PLUGINS_DIR="${CUSTOM_SCRIPT_PLUGINS_DIR:-/repo/plugins}"
 
 PLUGINS_LIST_CHECKSUM="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
 PLUGINS_DIR_REVISION="$(realpath "${CUSTOM_SCRIPT_PLUGINS_DIR}" | md5sum)"
+LAST_RESYNC="$(date +%s)"
 
 echo "$(date) Initial plugins list checksum ${PLUGINS_LIST_CHECKSUM} and plugin dir revision ${PLUGINS_DIR_REVISION}, starting loop with sleep ${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME} ..."
-
-# Loop times after which a "resync" will be done
-resync_loop_count=1
 
 while true; do
     sleep "${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME}"
 
     if [ "${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC}" = "true" ]; then
-        if [ "${resync_loop_count}" -ge "${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT_COUNT}" ]; then
+        # Check if it is time for a resync
+        NOW="$(date +%s)"
+        if [ "$(( NOW - LAST_RESYNC ))" -ge "${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT}" ]; then
             echo "$(date) Plugin resync loop triggered."
             plugins_install
-            resync_loop_count=1
+            LAST_RESYNC="$(date +%s)"
             continue
         fi
-        resync_loop_count=$(( resync_loop_count + 1 ))
     fi
 
     if [ ! -e "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}" ]; then
