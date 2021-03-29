@@ -83,7 +83,6 @@ if [ "${1}" = "java" ]; then
     }
     trap cleanup SIGINT SIGTERM
 
-    set -x
     while true; do
         echo "$(date) Running java command:"
         /usr/bin/java "${@}" < /dev/stdin &
@@ -102,10 +101,10 @@ if [ "${1}" = "java" ]; then
             while true; do
                 sleep "${RESTART_PAUSE_CHECK_INTERVAL}"
                 if [ ! -e "${RESTART_PAUSE_FILE}" ]; then
-                    echo "$(date) Restart pause file not found (anymore), continuing restarting ..."
+                    echo "$(date) Restart pause file not found (anymore), continuing restart ..."
                     break
                 fi
-                echo "$(date) Restart pause file found, waiting ${RESTART_PAUSE_CHECK_INTERVAL} ..."
+                echo "$(date) Restart pause file found, waiting ${RESTART_PAUSE_CHECK_INTERVAL} seconds ..."
             done
         fi
     done

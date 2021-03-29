@@ -15,6 +15,28 @@ trap cleanup SIGINT SIGTERM
 
 plugins_install() {
     echo "$(date) Plugins install list has been updated (checksum: ${PLUGINS_LIST_CHECKSUM_NEW}). Triggering plugin installation scripts ..."
+    if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
+        local server_status
+        server_status="$(cut -d' ' -f2 "${SERVER_STATUS_PLUGIN_STATUS_FILE}")"
+        # When the status is `Starting`, we need to wait till it is `Ready`
+        if [ "${server_status}" = "Starting" ]; then
+            echo -n "-> Server Status is ${server_status}: Waiting till status changes to other status ..."
+            while true; do
+                sleep 3
+                if [ ! -e "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
+                    echo "$(date) WARNING! Server Status file not found anymore, continuing plugins install ..."
+                    break
+                fi
+
+                server_status="$(cut -d' ' -f2 "${SERVER_STATUS_PLUGIN_STATUS_FILE}")"
+                if [ "${server_status}" != "Starting" ]; then
+                    echo "$(date) Server Status is now ${server_status}, continuing plugin install ..."
+                    break
+                fi
+                echo "$(date) Server Status still not changed, waiting 3 seconds ..."
+            done
+        fi
+    fi
     echo "$(date) $0" > "${RESTART_PAUSE_FILE}"
     /custom_scripts/plugins_install.sh
     rm -f "${RESTART_PAUSE_FILE}"
@@ -36,6 +58,12 @@ CUSTOM_SCRIPT_PLUGINS_DIR="${CUSTOM_SCRIPT_PLUGINS_DIR:-/repo/plugins}"
 PLUGINS_LIST_CHECKSUM="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
 PLUGINS_DIR_REVISION="$(realpath "${CUSTOM_SCRIPT_PLUGINS_DIR}" | md5sum)"
 LAST_RESYNC="$(date +%s)"
+
+SERVER_STATUS_PLUGIN_STATUS_FILE="${SERVER_STATUS_PLUGIN_STATUS_FILE:-/data/plugins/ServerStatus/Status.yml}"
+
+if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
+    echo "ServerStatus plugin Status file found"
+fi
 
 echo "$(date) Initial plugins list checksum ${PLUGINS_LIST_CHECKSUM} and plugin dir revision ${PLUGINS_DIR_REVISION}, starting loop with sleep ${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME} ..."
 
