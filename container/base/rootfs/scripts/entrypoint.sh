@@ -6,6 +6,7 @@ JAVA_FLAGS="${JAVA_FLAGS:-}"
 RESTART_JAVA_PROCESS="${RESTART_JAVA_PROCESS:-true}"
 RESTART_PAUSE_FILE="${RESTART_PAUSE_FILE:-/data/.pause_restart}"
 RESTART_PAUSE_CHECK_INTERVAL="${RESTART_PAUSE_CHECK_INTERVAL:-3}"
+SERVER_STATUS_PLUGIN_STATUS_FILE="${SERVER_STATUS_PLUGIN_STATUS_FILE:-/data/plugins/ServerStatus/Status.yml}"
 
 export FIRST_STARTUP="${FIRST_STARTUP:-false}"
 
@@ -95,6 +96,12 @@ if [ "${1}" = "java" ]; then
             exit ${rt}
         fi
         echo "$(date) Java program exited with code ${rt}, restarting ..."
+
+        if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
+            # Set Server status to be starting and wait a second
+            echo "Status: Starting" > "${SERVER_STATUS_PLUGIN_STATUS_FILE}"
+            sleep 1
+        fi
 
         if [ -e "${RESTART_PAUSE_FILE}" ]; then
             echo "$(date) Restart pause file found (contents: '$(cat "${RESTART_PAUSE_FILE}")'), waiting ${RESTART_PAUSE_CHECK_INTERVAL} ..."

@@ -59,8 +59,6 @@ PLUGINS_LIST_CHECKSUM="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
 PLUGINS_DIR_REVISION="$(realpath "${CUSTOM_SCRIPT_PLUGINS_DIR}" | md5sum)"
 LAST_RESYNC="$(date +%s)"
 
-SERVER_STATUS_PLUGIN_STATUS_FILE="${SERVER_STATUS_PLUGIN_STATUS_FILE:-/data/plugins/ServerStatus/Status.yml}"
-
 if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
     echo "ServerStatus plugin Status file found"
 fi
