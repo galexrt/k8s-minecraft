@@ -27,7 +27,7 @@ find /data/plugins "${DATA_PATCH_FILES[@]}" \
                 -o \( -iname '*.*-patch.yaml' \) \
             \) \
         \) -print0 \
-    \) | \
+    \) | sort -z | \
         while IFS= read -r -d '' file; do
             echo "yq-file-patching: Patching ${file} file ..."
             if [ ! -f "${file/.*-patch/}" ]; then
