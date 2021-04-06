@@ -3,7 +3,7 @@
 BUILDAH ?= buildah
 BUILDAH_LAYERS ?= false
 
-IMAGES ?= base limbo paper velocity waterfall
+IMAGES ?= base paper velocity waterfall
 
 .PHONY: build
 build: $(addprefix build-, $(IMAGES))
