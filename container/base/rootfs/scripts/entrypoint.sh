@@ -104,7 +104,7 @@ if [ "${1}" = "java" ]; then
         fi
 
         if [ -e "${RESTART_PAUSE_FILE}" ]; then
-            echo "$(date) Restart pause file found (contents: '$(cat "${RESTART_PAUSE_FILE}")'), waiting ${RESTART_PAUSE_CHECK_INTERVAL} ..."
+            echo "$(date) Restart pause file found (contents: '$(cat "${RESTART_PAUSE_FILE}")'), waiting ${RESTART_PAUSE_CHECK_INTERVAL} seconds ..."
             while true; do
                 sleep "${RESTART_PAUSE_CHECK_INTERVAL}"
                 if [ ! -e "${RESTART_PAUSE_FILE}" ]; then
