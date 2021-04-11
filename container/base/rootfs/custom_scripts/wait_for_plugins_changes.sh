@@ -24,7 +24,7 @@ plugins_install() {
             echo -n "-> Server Status is ${server_status}: Waiting till status changes to other status ..."
             while true; do
                 sleep 3
-                if (( DONE != 1 )); then
+                if (( DONE != 0 )); then
                     echo "Signal caught (plugins_install server status loop), DONE."
                     return
                 fi
@@ -78,7 +78,7 @@ echo "$(date) Initial plugins list checksum ${PLUGINS_LIST_CHECKSUM} and plugin 
 
 while true; do
     sleep "${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME}"
-    if (( DONE != 1 )); then
+    if (( DONE != 0 )); then
         echo "Signal caught (main loop), DONE."
         exit 0
     fi
