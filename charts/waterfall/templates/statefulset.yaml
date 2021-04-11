@@ -133,8 +133,14 @@ spec:
           configMap:
             name: {{ include "waterfall.fullname" . }}
             items:
+            {{- if hasKey .Values.config "base_plugins_install_list.txt" }}
+            - key: base_plugins_install_list.txt
+              path: base_plugins_install_list.txt
+            {{- end }}
+            {{- if hasKey .Values.config "plugins_install_list.txt" }}
             - key: plugins_install_list.txt
               path: plugins_install_list.txt
+            {{- end }}
         {{- end }}
       {{- with .Values.additionalVolumes }}
         {{- toYaml . | nindent 8 }}
