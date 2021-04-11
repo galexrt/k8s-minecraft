@@ -1,12 +1,17 @@
+{{- if or (hasKey .Values.config "base_plugins_install_list.txt") (hasKey .Values.config "plugins_install_list.txt") }}
 apiVersion: v1
 kind: ConfigMap
 data:
+  {{- if hasKey .Values.config "base_plugins_install_list.txt" }}
   base_plugins_install_list.txt: |
   {{- (index .Values.config "base_plugins_install_list.txt" | default "") | nindent 4 }}
-
+{{- end }}
+{{- if hasKey .Values.config "plugins_install_list.txt" }}
   plugins_install_list.txt: |
-  {{- (index .Values.config "plugins_install_list.txt" | default "") | nindent 4 }}
+  {{- index .Values.config "plugins_install_list.txt" | nindent 4 }}
+{{- end }}
 metadata:
   name: {{ include "waterfall.fullname" . }}
   labels:
     {{- include "waterfall.labels" . | nindent 4 }}
+{{- end }}
