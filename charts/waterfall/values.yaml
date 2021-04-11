@@ -118,6 +118,9 @@ additionalContainers: []
 additionalObjects: []
 
 config: {}
+  #base_plugins_install_list.txt: |-
+  #  Plugin1
+  #  Plugin2
   #plugins_install_list.txt: |-
   #  Plugin1
   #  Plugin2

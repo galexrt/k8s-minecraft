@@ -6,6 +6,7 @@ set -e
 source /custom_scripts/vars.sh
 
 CUSTOM_SCRIPT_PLUGINS_INSTALL="${CUSTOM_SCRIPT_PLUGINS_INSTALL:-false}"
+CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE="${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE:-/plugins_install_list/base_plugins_install_list.txt}"
 CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE="${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE:-/plugins_install_list/plugins_install_list.txt}"
 CUSTOM_SCRIPT_PLUGINS_DIR="${CUSTOM_SCRIPT_PLUGINS_DIR:-/repo/plugins}"
 
@@ -14,15 +15,15 @@ if [ "${CUSTOM_SCRIPT_PLUGINS_INSTALL}" != "true" ]; then
     exit
 fi
 
-if [ ! -e "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}" ] && [ -z "${PLUGINS_TO_INSTALL}" ]; then
-    echo "No ${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE} file found and empty PLUGINS_TO_INSTALL env var, skipping plugins install ..."
+if [ ! -e "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}" ]; then
+    echo "No ${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE} file found, skipping plugins install ..."
     exit
 fi
-
-# When the env var is empty, read the plugins list file
-if [ -z "${PLUGINS_TO_INSTALL}" ]; then
-    PLUGINS_TO_INSTALL="$(sed -r -e '/^(|#.*)$/d' "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
+if [ ! -e "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE}" ]; then
+    CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE="/dev/null"
 fi
+
+PLUGINS_TO_INSTALL="$(sed -r -e '/^(|#.*)$/d' "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE}" "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}" | sort | uniq)"
 
 while IFS= read -r plugin; do
     n=1

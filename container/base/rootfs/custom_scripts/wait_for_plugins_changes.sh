@@ -14,7 +14,7 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 plugins_install() {
-    echo "$(date) Plugins install list has been updated (checksum: ${PLUGINS_LIST_CHECKSUM_NEW}). Triggering plugin installation scripts ..."
+    echo "$(date) Running plugin installation scripts ..."
     if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
         local server_status
         server_status="$(cut -d' ' -f2 "${SERVER_STATUS_PLUGIN_STATUS_FILE}")"
@@ -52,12 +52,17 @@ CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC="${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC:-fa
 # After roughly 900 seconds a full sync is run
 CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT="${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC_WAIT:-900}"
 # Must be kept in sync with the `pre/plugins-install.sh` script
+CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE="${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE:-/plugins_install_list/base_plugins_install_list.txt}"
 CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE="${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE:-/plugins_install_list/plugins_install_list.txt}"
 CUSTOM_SCRIPT_PLUGINS_DIR="${CUSTOM_SCRIPT_PLUGINS_DIR:-/repo/plugins}"
 
-PLUGINS_LIST_CHECKSUM="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
+PLUGINS_LIST_CHECKSUM="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE}" "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
 PLUGINS_DIR_REVISION="$(realpath "${CUSTOM_SCRIPT_PLUGINS_DIR}" | md5sum)"
 LAST_RESYNC="$(date +%s)"
+
+if [ ! -e "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE}" ]; then
+    CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE="/dev/null"
+fi
 
 if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
     echo "ServerStatus plugin Status file found"
@@ -84,16 +89,17 @@ while true; do
         continue
     fi
 
-    PLUGINS_LIST_CHECKSUM_NEW="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
+    PLUGINS_LIST_CHECKSUM_NEW="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE}" "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
     PLUGINS_DIR_REVISION_NEW="$(realpath "${CUSTOM_SCRIPT_PLUGINS_DIR}" | md5sum)"
     if [ "${PLUGINS_LIST_CHECKSUM}" = "${PLUGINS_LIST_CHECKSUM_NEW}"  ] && [ "${PLUGINS_DIR_REVISION_NEW}" = "${PLUGINS_DIR_REVISION}" ]; then
         continue
     fi
 
+    echo "$(date) Plugins install list has been updated."
     # Update plugins on list file checksum change or when the dir path changed (e.g., git-sync)
-    sleep_time="$(shuf -i 0-12 -n 1)"
+    sleep_time="$(shuf -i 0-15 -n 1)"
     echo "$(date) Sleeping ${sleep_time} before running plugins_install scripts ..."
-    PLUGINS_LIST_CHECKSUM="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
+    PLUGINS_LIST_CHECKSUM="$(md5sum "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE_BASE}" "${CUSTOM_SCRIPT_PLUGINS_INSTALL_FILE}")"
     PLUGINS_DIR_REVISION="$(realpath "${CUSTOM_SCRIPT_PLUGINS_DIR}" | md5sum)"
     plugins_install
 done
