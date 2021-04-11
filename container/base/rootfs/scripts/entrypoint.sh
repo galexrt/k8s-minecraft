@@ -77,6 +77,7 @@ if [ "${1}" = "java" ]; then
     # Set Java PID to the script till the PID is set
     java_pid="$$"
     cleanup() {
+        RESTART_JAVA_PROCESS=false
         kill -s SIGTERM "${java_pid}"
         wait "${java_pid}"
         echo "Cleanup trap completed."
@@ -107,6 +108,11 @@ if [ "${1}" = "java" ]; then
             echo "$(date) Restart pause file found (contents: '$(cat "${RESTART_PAUSE_FILE}")'), waiting ${RESTART_PAUSE_CHECK_INTERVAL} seconds ..."
             while true; do
                 sleep "${RESTART_PAUSE_CHECK_INTERVAL}"
+                if [ "${RESTART_JAVA_PROCESS}" != "true" ]; then
+                    echo "Signal caught (restart pause file (no more restarts)), DONE."
+                    break
+                fi
+
                 if [ ! -e "${RESTART_PAUSE_FILE}" ]; then
                     echo "$(date) Restart pause file not found (anymore), continuing restart ..."
                     break

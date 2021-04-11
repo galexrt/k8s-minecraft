@@ -4,6 +4,7 @@
 source /custom_scripts/vars.sh
 
 SCRIPT_PID="$$"
+DONE=0
 
 cleanup() {
     # Remove restart pause file
@@ -11,7 +12,7 @@ cleanup() {
     kill -s SIGTERM "${SCRIPT_PID}"
     exit 0
 }
-trap cleanup SIGINT SIGTERM
+trap "cleanup" SIGINT SIGTERM
 
 plugins_install() {
     echo "$(date) Running plugin installation scripts ..."
@@ -23,6 +24,11 @@ plugins_install() {
             echo -n "-> Server Status is ${server_status}: Waiting till status changes to other status ..."
             while true; do
                 sleep 3
+                if (( DONE != 1 )); then
+                    echo "Signal caught (plugins_install server status loop), DONE."
+                    return
+                fi
+
                 if [ ! -e "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
                     echo "$(date) WARNING! Server Status file not found anymore, continuing plugins install ..."
                     break
@@ -72,6 +78,10 @@ echo "$(date) Initial plugins list checksum ${PLUGINS_LIST_CHECKSUM} and plugin 
 
 while true; do
     sleep "${CUSTOM_SCRIPT_PLUGINS_INSTALL_SLEEP_TIME}"
+    if (( DONE != 1 )); then
+        echo "Signal caught (main loop), DONE."
+        exit 0
+    fi
 
     if [ "${CUSTOM_SCRIPT_PLUGINS_INSTALL_RESYNC}" = "true" ]; then
         # Check if it is time for a resync
