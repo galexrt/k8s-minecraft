@@ -1,4 +1,4 @@
-VERSION ?= 1.16.5/597
+VERSION ?= 1.16.5/601
 IMAGE_NAME = paper
 
 include ../Makefile.common
