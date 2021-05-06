@@ -4,6 +4,7 @@
 source /custom_scripts/vars.sh
 
 /custom_scripts/pre/jars-removal.sh
+find /data -iname '*-patch.yml' -delete
 /custom_scripts/pre/plugins-install.sh
 /custom_scripts/pre/server-base-install.sh
 /custom_scripts/pre/server-configs-install.sh
