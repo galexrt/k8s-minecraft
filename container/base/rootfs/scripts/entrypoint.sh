@@ -120,6 +120,19 @@ if [ "${1}" = "java" ]; then
                 echo "$(date) Restart pause file found, waiting ${RESTART_PAUSE_CHECK_INTERVAL} seconds ..."
             done
         fi
+        if [ -d /custom_scripts/server_restart/ ]; then
+            for f in /custom_scripts/server_restart/*.sh; do
+                echo "Running server_restart custom_script ${f} ..."
+                bash "${f}" || {
+                    if [ "${FIRST_STARTUP}" = "true" ]; then
+                        echo "Ignoring server_restart custom_script ${f} failure."; return;
+                    fi;
+                    echo "server_restart custom_script ${f} failed. Exiting ...";
+                    exit 1;
+                }
+                echo "Done. Ran server_restart custom_script ${f}."
+            done
+        fi
     done
 fi
 
