@@ -13,3 +13,8 @@ RESTART_PAUSE_FILE="${RESTART_PAUSE_FILE:-/data/.pause_restart}"
 GAMESERVER_POD_HOSTNAME="${GAMESERVER_POD_HOSTNAME:-${POD_HOSTNAME}}"
 GAMESERVER_SERVER_NAME_WONUM="${POD_HOSTNAME%-*}"
 SERVER_STATUS_PLUGIN_STATUS_FILE="${SERVER_STATUS_PLUGIN_STATUS_FILE:-/data/plugins/ServerStatus/Status.yml}"
+
+if [ -f "/data/.env" ]; then
+    # shellcheck disable=SC1091
+    source /data/.env
+fi
