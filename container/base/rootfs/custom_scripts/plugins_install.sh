@@ -4,7 +4,26 @@
 source /custom_scripts/vars.sh
 
 /custom_scripts/pre/jars-removal.sh
-find /data -iname '*-patch.yml' -delete
+
+# Delete patch files
+find /data \
+    \( \
+        \( \
+            \( \
+                -iwholename '/data/plugins/dynmap/web/tiles' \
+                -o -iwholename '/data/plugins/Essentials/userdata' \
+            \) \
+            -prune -false \
+        \) \
+       -o \( \
+            -type f \
+            -a \( \
+                \( -iname '*.*-patch.yml' \) \
+                -o \( -iname '*.*-patch.yaml' \) \
+            \) \
+        \) -delete \
+    \)
+
 /custom_scripts/pre/plugins-install.sh
 /custom_scripts/pre/server-base-install.sh
 /custom_scripts/pre/server-configs-install.sh
