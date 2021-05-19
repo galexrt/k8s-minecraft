@@ -21,7 +21,7 @@ find /data \
                 \( -iname '*.*-patch.yml' \) \
                 -o \( -iname '*.*-patch.yaml' \) \
             \) \
-        \) -delete \
+        \) -exec rm {} + \
     \)
 
 /custom_scripts/pre/plugins-install.sh
