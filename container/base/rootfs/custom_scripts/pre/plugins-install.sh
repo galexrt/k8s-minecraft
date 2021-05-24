@@ -30,8 +30,13 @@ while IFS= read -r plugin; do
     until [ "$n" -gt 3 ]; do
         if [ -d "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}" ]; then
             echo "Copying plugin data ${plugin} to server (try $n/3) ..."
-            # shellcheck disable=SC2145,SC2086
-            rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}/" /data/plugins/ && break
+            if [ "${PLUGINS_INSTALL_REMOVE_JARS}" == "true" ]; then
+                # shellcheck disable=SC2145,SC2086
+                rsync ${RSYNC_FLAGS} "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}/" /data/plugins/ && break
+            else
+                # shellcheck disable=SC2145,SC2086
+                rsync ${RSYNC_FLAGS} --exclude='*.jar' "${CUSTOM_SCRIPT_PLUGINS_DIR}/${plugin}/" /data/plugins/ && break
+            fi
             echo "ERROR: Failed to copy ${plugin} data to server (try $n/3). Sleeping 5 seconds ..."
             sleep 5
         else
