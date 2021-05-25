@@ -44,7 +44,7 @@ plugins_install() {
         fi
     fi
     echo "$(date) $0" > "${RESTART_PAUSE_FILE}"
-    /custom_scripts/plugins_install.sh
+    /custom_scripts/do_plugins_install.sh
     rm -f "${RESTART_PAUSE_FILE}"
     echo "$(date) Plugins install from list completed."
 }
