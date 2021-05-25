@@ -3,6 +3,6 @@
 # shellcheck disable=SC1091
 source /custom_scripts/vars.sh
 
-export PLUGINS_INSTALL_REMOVE_JARS="true"
+export CUSTOM_SCRIPT_JARS_REMOVE="true"
 
 /custom_scripts/plugins_install.sh
