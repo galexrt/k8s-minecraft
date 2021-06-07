@@ -64,14 +64,14 @@ if [ "${1}" = "java" ]; then
     shift
 
     if [ -n "${JAVA_JAR}" ]; then
-        set -- -jar "${JAVA_JAR}" "$@"
+        set -- -jar "${JAVA_JAR}" "${@}"
     else
         echo "WARNING! No JAVA_JAR var set in container."
     fi
     if [ -n "${JAVA_FLAGS}" ]; then
-        echo "Adding JAVA_FLAGS to args: ${JAVA_FLAGS}"
+        echo "Adding JAVA_FLAGS to args"
         # shellcheck disable=SC2086
-        set -- ${JAVA_FLAGS} "$@"
+        set -- ${JAVA_FLAGS} "${@}"
     fi
 
     # Set Java PID to the script till the PID is set
@@ -86,7 +86,7 @@ if [ "${1}" = "java" ]; then
     trap cleanup SIGINT SIGTERM
 
     while true; do
-        echo "$(date) Running java command:"
+        echo "$(date) Running java command: /usr/bin/java ${*}"
         /usr/bin/java "${@}" < /dev/stdin &
         java_pid=$!
 
