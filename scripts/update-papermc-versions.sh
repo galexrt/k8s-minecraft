@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MC_VERSION="${MC_VERSION:-1.16}"
+MC_VERSION="${MC_VERSION:-1.17}"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
