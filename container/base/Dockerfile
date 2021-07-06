@@ -13,7 +13,7 @@ COPY rootfs /
 # libwebp-tools is installed for dynmap / bluemap users
 RUN dnf upgrade -y && \
     dnf install -y \
-        adoptopenjdk-11-hotspot wget procps net-tools findutils \
+        adoptopenjdk-16-hotspot wget procps net-tools findutils \
         glibc-locale-source glibc-langpack-en libwebp-tools \
         rsync inotify-tools tar && \
     dnf clean all && \
