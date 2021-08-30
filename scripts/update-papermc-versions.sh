@@ -19,7 +19,7 @@ sed -i -r 's~^VERSION \?=.+$~VERSION ?= '"${PAPER_MC_VERSION}"'/'"${PAPER_VERSIO
 
 
 git add ../container/paper/Makefile
-git commit -s -S -m "container: update paper to ${PAPER_VERSION}"
+git commit -m "container: update paper to ${PAPER_VERSION}"
 
 # Waterfall
 WATERFALL_VERSION=$(curl -sS --fail "https://papermc.io/api/v2/projects/waterfall/versions/${MC_VERSION}/" | \
@@ -28,6 +28,4 @@ WATERFALL_VERSION=$(curl -sS --fail "https://papermc.io/api/v2/projects/waterfal
 sed -i -r 's~^VERSION \?=.+$~VERSION ?= '"${MC_VERSION}"'/'"${WATERFALL_VERSION}"'~' ../container/waterfall/Makefile
 
 git add ../container/waterfall/Makefile
-git commit -s -S -m "container: update waterfall to ${WATERFALL_VERSION}"
-
-git push
+git commit -m "container: update waterfall to ${WATERFALL_VERSION}"
