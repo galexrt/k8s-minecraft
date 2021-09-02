@@ -1,7 +1,7 @@
 name: daily-update
 on:
   schedule:
-    - cron:  '20 14 * * *'
+    - cron:  '20 10 * * *'
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -11,8 +11,9 @@ jobs:
           submodules: true
       - name: Run Paper MC Version Checker and Updater
         run: |
-          set -x
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           ./scripts/update-papermc-versions.sh
-          git push
+      - name: Push Changes
+        run: |
+          git push https://${{ secrets.GITHUB_PAT }}@github.com/${GITHUB_REPOSITORY}.git
