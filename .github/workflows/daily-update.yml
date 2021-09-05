@@ -1,7 +1,10 @@
 name: daily-update
 on:
-  schedule:
-    - cron:  '20 10 * * *'
+  #schedule:
+  #  - cron:  '20 10 * * *'
+  push:
+    branches:
+      - test
 jobs:
   update:
     runs-on: ubuntu-latest
