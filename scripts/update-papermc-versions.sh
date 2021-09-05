@@ -29,3 +29,5 @@ sed -i -r 's~^VERSION \?=.+$~VERSION ?= '"${MC_VERSION}"'/'"${WATERFALL_VERSION}
 
 git add ../container/waterfall/Makefile
 git commit -m "container: update waterfall to ${WATERFALL_VERSION}"
+
+git push
