@@ -32,6 +32,8 @@ find "${ENVSUBST_DIRS[*]}" \
                 -o \( -iname '*.conf' \) \
                 -o \( -iname '*.json' \) \
                 -o \( -iname '*.cm2' \) \
+                -o \( -iname '*.hocon' \) \
+                -o \( -iname '*.cfg' \) \
             \) \
         \) -print0 \
     \) | \
