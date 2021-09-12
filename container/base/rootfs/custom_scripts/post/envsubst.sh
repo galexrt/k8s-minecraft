@@ -13,7 +13,8 @@ GAMESERVER_SERVER_TYPE="${GAMESERVER_SERVER_TYPE:-unset}"
 ENVSUBST_DIRS="${ENVSUBST_DIRS:-/data/*.yml /data/plugins}"
 
 echo "envsubst: Running envsubst on config files ..."
-find "${ENVSUBST_DIRS[*]}" \
+# shellcheck disable=SC2086
+find ${ENVSUBST_DIRS} \
     \( \
         \( \
             \( \
