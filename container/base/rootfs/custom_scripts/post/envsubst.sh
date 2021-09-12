@@ -10,8 +10,10 @@ echo "POD_ID is: ${POD_ID} (+1 is ${POD_ID_PLUS})"
 GAMESERVER_MYSQL_SPECIFIC_DBNAME="${GAMESERVER_MYSQL_SPECIFIC_DBNAME:-mc_${POD_HOSTNAME//-/_}}"
 GAMESERVER_SERVER_TYPE="${GAMESERVER_SERVER_TYPE:-unset}"
 
+ENVSUBST_DIRS="${ENVSUBST_DIRS:-/data/*.yml /data/plugins}"
+
 echo "envsubst: Running envsubst on config files ..."
-find /data/*.yml /data/plugins \
+find "${ENVSUBST_DIRS[*]}" \
     \( \
         \( \
             \( \
