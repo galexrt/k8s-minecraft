@@ -2,15 +2,12 @@
 
 set -e
 
+export SCRIPTS_DIR="${SCRIPTS_DIR:-/scripts}"
+
 # shellcheck disable=SC1091
-source /custom_scripts/vars.sh
+source "${SCRIPTS_DIR}/vars.sh"
 
-echo "POD_ID is: ${POD_ID} (+1 is ${POD_ID_PLUS})"
-# This assumes the databases are named `mc_POD_HOSTNAME`
-GAMESERVER_MYSQL_SPECIFIC_DBNAME="${GAMESERVER_MYSQL_SPECIFIC_DBNAME:-mc_${POD_HOSTNAME//-/_}}"
-GAMESERVER_SERVER_TYPE="${GAMESERVER_SERVER_TYPE:-unset}"
-
-ENVSUBST_DIRS="${ENVSUBST_DIRS:-/data/*.yml /data/plugins}"
+ENVSUBST_DIRS="${ENVSUBST_DIRS:-${DATA_DIR}/*.yml ${DATA_DIR}/plugins}"
 
 echo "envsubst: Running envsubst on config files ..."
 # shellcheck disable=SC2086
@@ -18,8 +15,8 @@ find ${ENVSUBST_DIRS} \
     \( \
         \( \
             \( \
-                -iwholename '/data/plugins/dynmap/web/tiles' \
-                -o -iwholename '/data/plugins/Essentials/userdata' \
+                -iwholename "${DATA_DIR}/plugins/dynmap/web/tiles" \
+                -o -iwholename "${DATA_DIR}/plugins/Essentials/userdata" \
             \) \
             -prune -false \
         \) \
@@ -44,7 +41,7 @@ find ${ENVSUBST_DIRS} \
             if ! grep --quiet --perl-regexp '\${GAMESERVER_.+}' "${file}" > /dev/null 2>&1; then
                 continue
             fi
-            echo "Replacing vars in ${file} ..."
+            echo "envsubst: Replacing vars in ${file} ..."
             for var in "${!GAMESERVER_@}"; do
                 value="${!var}"
                 # In value replacements are done here

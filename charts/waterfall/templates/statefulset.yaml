@@ -81,7 +81,8 @@ spec:
         {{- if or (hasKey .Values.config "base_plugins_install_list.txt") (hasKey .Values.config "plugins_install_list.txt") }}
         - name: pluginswatcher
           command:
-            - /custom_scripts/wait_for_plugins_changes.sh
+            - /scripts/git-sync.sh
+            - watch
           env:
           {{ range $k, $v := .Values.additionalEnv }}
             - name: {{ $k | quote }}

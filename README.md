@@ -4,14 +4,16 @@ Minecraft in K8S because why not?
 
 ## Goals
 
-- [ ] MinecraftServer Resource to run "an arbitrary" server (Spigot, Paper, Sponge, etc.) image in Kubernetes
-- [ ] ProxyServer Resource to run "an arbitrary" proxy (Bungeecord, Waterfall, Velocity, etc.) image in Kubernetes
-- [ ] Compact server / proxy process daemon in the containers
-- [ ] Easy to use, as long as you have a Kubernetes cluster
+Goal of this repo is to provide kind of easy to use container images to be used in Kubernetes.
+In addition to container images, Helm Charts for Paper (can be used as a base for generic Minecraft Server) and Waterfall deployment.
 
-## Architecture
+## Helm Charts
 
-![Architecture Overview](images/architecture.svg)
+The Helm charts default `values.yaml` assume that you agree to the Minecraft EULA.
+
+## Flow
+
+![Flow](images/flow.svg)
 
 <details>
     <summary>Click to expand</summary>
@@ -19,27 +21,39 @@ Minecraft in K8S because why not?
 
 ```mermaidjs
 sequenceDiagram
-    participant Admin
-    participant Kubernetes
-    participant Operator
-    participant MessageQueue
-    participant Gameserver
-    participant Node
-    participant Webinterface
-    Admin->>Kubernetes: Create Minecraft Gameserver CR
-    Operator-->>Operator: Watches * Gameserver CRs
-    Operator->>Kubernetes: Create StatefulSet, Services, etc. in Kubernetes
-    Kubernetes-->Node: Assign Gameserver to available nodes
-    Gameserver-->Node: Runs as Pod
-    Operator->>MessageQueue: Send commands for setup (optional)
-    Gameserver-->MessageQueue: Receive commands and send state and info
-    Admin->>MessageQueue: Send commands
-    Webinterface-->MessageQueue: Admins can send commands (by API)
-    Admin->>Kubernetes: Logs stream from kubelet
-    Kubernetes-->Node: Stream logs 
+  participant Entrypoint
+  participant GitRepo
+  participant MCServer
+
+  Entrypoint --> GitRepo: Check if a new revision is available
+  Entrypoint -->> MCServer: Copy all or changed files to data dir (including jars)
+  Entrypoint --> Entrypoint: Run envsubst + other scripts on files
+  Entrypoint --> MCServer: Start Server
+  MCServer --> MCServer: Run
+  MCServer --> MCServer: Restarted (/restart Command)
+  Entrypoint --> GitRepo: Check for new revision
+  Entrypoint -->> MCServer: Copy all or changed files to data dir (including jars)
+  Entrypoint --> Entrypoint: Run envsubst + other scripts on files
+  Entrypoint --> MCServer: Start Server
+  MCServer --> MCServer: Run
+  GitRepo --> GitRepo: Commit pushed
+  Entrypoint --> GitRepo: Checks for new revision every 10-20 seconds
+  Entrypoint -->> MCServer: Copy all or changed files to data dir (without jars)
+  Entrypoint --> Entrypoint: Run envsubst + other scripts on files
+
+  note left of GitRepo: All files are only copied if the server's revision is not found in the git history
+  note right of Entrypoint: Only changed files are copied to a server
 ```
 </p>
 </details>
+
+The "copying of files from the GitRepo to the MCServer" will have the following features:
+
+* Variables in format `${VARIABLE}` are replaced in all config files.
+* `yq` can be used for applying patch files to config files.
+* Depending on if the server is running, `*.jar` files are not updated.
+* Depending on if the server's revision is still available in the git history, only changed files are copied, otherwise "everything" is copied.
+* A function to copy a map to the server, e.g., to easily have lobby servers their map always the same / updated after a restart. (_Not implemented yet_)
 
 ## Shoutouts
 
