@@ -108,7 +108,7 @@ fi
 CHANGED_FILES="$(echo "${CHANGED_FILES}" | sed -r '/'"${GIT_SYNC_IGNORED_CHANGED_FILES}"'/d')"
 
 # If there are no changed files and plugin list didn't change, exit early
-if [ "${MODE}" = "partial" ] && [ -z "${CHANGED_FILES}" ]; then
+if [ "${MODE}" = "partial" ] && [ -z "${CHANGED_FILES}" ] && [ "${PLUGINS_LIST_CHECKSUM}" = "${PLUGINS_LIST_CHECKSUM_NEW}" ]; then
     echo "git-sync: No changed files detected for partial sync. Exiting ..."
     echo "${REPO_REVISION}" > "${REVISION_FILE}"
     rm -f "${RESTART_PAUSE_FILE}"
