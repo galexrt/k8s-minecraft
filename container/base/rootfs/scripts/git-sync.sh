@@ -44,14 +44,26 @@ if [ "${MODE}" = "watch" ]; then
     exit 0
 fi
 
+REPO_REVISION="$(git -C "${GIT_SYNC_REPO_DIR}" log --format="%H" -n 1)"
 SERVER_REVISION="${SERVER_REVISION:-}"
 if [ -f "${REVISION_FILE}" ]; then
     SERVER_REVISION="$(cat "${REVISION_FILE}")"
 fi
-REPO_REVISION="$(git -C "${GIT_SYNC_REPO_DIR}" log --format="%H" -n 1)"
 
-if [ "${MODE}" = "partial" ] && [ "${SERVER_REVISION}" = "${REPO_REVISION}" ]; then
-    echo "git-sync: $(date) Repo and Server Revision is the same no need to do update."
+# Read plugin list file if available
+if [ -f "${PLUGINS_LIST_CHECKSUM_FILE}" ]; then
+    PLUGINS_LIST_CHECKSUM="$(cat "${PLUGINS_LIST_CHECKSUM_FILE}")"
+    PLUGINS_LIST_CHECKSUM_NEW="$(md5sum "${GIT_SYNC_PLUGINS_INSTALL_FILE_BASE}" "${GIT_SYNC_PLUGINS_INSTALL_FILE}")"
+else
+    PLUGINS_LIST_CHECKSUM="$(md5sum "${GIT_SYNC_PLUGINS_INSTALL_FILE_BASE}" "${GIT_SYNC_PLUGINS_INSTALL_FILE}")"
+    echo "${PLUGINS_LIST_CHECKSUM}" > "${PLUGINS_LIST_CHECKSUM_FILE}"
+    PLUGINS_LIST_CHECKSUM_NEW="${PLUGINS_LIST_CHECKSUM}"
+fi
+
+# If it is a partial mode run and server vs repo revision and plugin list is the same, nothing to do here
+if [ "${MODE}" = "partial" ] && \
+    [ "${SERVER_REVISION}" = "${REPO_REVISION}" ] && [ "${PLUGINS_LIST_CHECKSUM}" = "${PLUGINS_LIST_CHECKSUM_NEW}" ]; then
+    echo "git-sync: $(date) Repo and Server Revision and plugin install list is the same no need to do update."
     exit 0
 fi
 
@@ -95,7 +107,7 @@ if [ "${MODE}" = "partial" ]; then
 fi
 CHANGED_FILES="$(echo "${CHANGED_FILES}" | sed -r '/'"${GIT_SYNC_IGNORED_CHANGED_FILES}"'/d')"
 
-# If there are not changed files, exit early
+# If there are no changed files and plugin list didn't change, exit early
 if [ "${MODE}" = "partial" ] && [ -z "${CHANGED_FILES}" ]; then
     echo "git-sync: No changed files detected for partial sync. Exiting ..."
     echo "${REPO_REVISION}" > "${REVISION_FILE}"
@@ -107,6 +119,15 @@ if [ "${MODE}" = "full" ]; then
     # Full Mode
     echo "git-sync: Clearing plugin dir jars ..."
     rm -rf "${DATA_DIR}/plugins/"*.jar
+fi
+
+# In case the plugin list checksum differs, do a full update without jars
+if [ "${PLUGINS_LIST_CHECKSUM}" != "${PLUGINS_LIST_CHECKSUM_NEW}" ]; then
+    MODE="full"
+
+    CHANGED_FILES="$(echo "${CHANGED_FILES}" | sed '/*.jar/d')"
+    # shellcheck disable=SC2089
+    RSYNC_FLAGS="$RSYNC_FLAGS --exclude='*.jar'"
 fi
 
 # Copying Plugins
@@ -167,4 +188,5 @@ if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -qR "server\..*-pat
 fi
 
 echo "${REPO_REVISION}" > "${REVISION_FILE}"
+echo "${PLUGINS_LIST_CHECKSUM}" > "${PLUGINS_LIST_CHECKSUM_FILE}"
 echo "git-sync: Completed ${MODE} mode run at $(date)."
