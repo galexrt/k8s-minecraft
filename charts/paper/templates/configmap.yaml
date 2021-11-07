@@ -1,17 +1,17 @@
-{{- if or (hasKey .Values.config "base_plugins_install_list.txt") (hasKey .Values.config "plugins_install_list.txt") }}
 apiVersion: v1
 kind: ConfigMap
 data:
   eula.txt: |
   {{- index .Values.config "eula.txt" | nindent 4 }}
 
+{{- if or (hasKey .Values.config "base_plugins_install_list.txt") (hasKey .Values.config "plugins_install_list.txt") }}
   base_plugins_install_list.txt: |
   {{- (index .Values.config "base_plugins_install_list.txt" | default "") | nindent 4 }}
 
   plugins_install_list.txt: |
-  {{- (index .Values.config "plugins_install_list.txt" | default "") | nindent 4 }}
+  {{- index .Values.config "plugins_install_list.txt" | nindent 4 }}
+{{- end }}
 metadata:
   name: {{ include "paper.fullname" . }}
   labels:
     {{- include "paper.labels" . | nindent 4 }}
-{{- end }}

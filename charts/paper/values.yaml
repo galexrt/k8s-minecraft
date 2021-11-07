@@ -41,13 +41,14 @@ podSecurityContext:
   fsGroup: 1337
   fsGroupChangePolicy: "OnRootMismatch"
 
-securityContext: {}
+securityContext:
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1337
+  runAsGroup: 1337
   # capabilities:
   #   drop:
   #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 service:
   type: ClusterIP
@@ -71,7 +72,7 @@ tolerations: []
 
 affinity: {}
 
-terminationGracePeriodSeconds: 45
+terminationGracePeriodSeconds: 60
 
 podManagementPolicy: OrderedReady
 

@@ -18,3 +18,26 @@ spec:
     {{- end }}
   selector:
     {{- include "paper.selectorLabels" . | nindent 4 }}
+{{ $ := . }}
+{{ $replicaCount := .Values.replicaCount | int }}
+{{ range $key, $e := until $replicaCount }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "paper.fullname" $ }}-{{ $key }}-sftp
+  labels:
+    {{- include "paper.labels" $ | nindent 4 }}
+    server_name: {{ include "paper.fullname" $ }}-{{ $key }}
+    sftp-service: "yes"
+spec:
+  type: NodePort
+  ports:
+    - port: 2222
+      targetPort: sftp
+      protocol: TCP
+      name: sftp
+  selector:
+    {{- include "paper.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ include "paper.fullname" $ }}-{{ $key }}
+{{ end }}

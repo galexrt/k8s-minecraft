@@ -18,3 +18,26 @@ spec:
     {{- end }}
   selector:
     {{- include "waterfall.selectorLabels" . | nindent 4 }}
+{{ $ := . }}
+{{ $replicaCount := .Values.replicaCount | int }}
+{{ range $key, $e := until $replicaCount }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "waterfall.fullname" $ }}-{{ $key }}-sftp
+  labels:
+    {{- include "waterfall.labels" $ | nindent 4 }}
+    server_name: {{ include "waterfall.fullname" $ }}-{{ $key }}
+    sftp-service: "yes"
+spec:
+  type: NodePort
+  ports:
+    - port: 2222
+      targetPort: sftp
+      protocol: TCP
+      name: sftp
+  selector:
+    {{- include "waterfall.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ include "waterfall.fullname" $ }}-{{ $key }}
+{{ end }}

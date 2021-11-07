@@ -98,10 +98,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             requests:
-              cpu: 25m
-              memory: 35Mi
+              cpu: 15m
+              memory: 50Mi
             limits:
-              memory: 350Mi
+              cpu: 100m
+              memory: 325Mi
           volumeMounts:
             - name: server-data
               mountPath: /data
@@ -113,6 +114,30 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
         {{- end }}
+        - name: sftp
+          image: ghcr.io/linuxserver/openssh-server
+          env:
+            - name: PUID
+              value: "1337"
+            - name: PGID
+              value: "1337"
+            - name: TZ
+              value: "Europe/Berlin"
+            - name: PASSWORD_ACCESS
+              value: "false"
+            - name: USER_NAME
+              value: "minecraft"
+            - name: PUBLIC_KEY_FILE
+              value: "/.ssh/authorized_keys"
+          ports:
+            - name: sftp
+              containerPort: 2222
+              protocol: TCP
+          volumeMounts:
+            - name: server-data
+              mountPath: /data
+            - name: ssh-authorizedkeys
+              mountPath: /.ssh
         {{- with .Values.additionalContainers }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -143,6 +168,9 @@ spec:
               path: plugins_install_list.txt
             {{- end }}
         {{- end }}
+        - name: ssh-authorizedkeys
+          configMap:
+            name: ssh-authorizedkeys
       {{- with .Values.additionalVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
