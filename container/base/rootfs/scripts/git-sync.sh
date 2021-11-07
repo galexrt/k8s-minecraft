@@ -157,14 +157,11 @@ if [ "${MODE}" = "partial" ]; then
     export ENVSUBST_DIRS="${CHANGED_DIRS%' '}"
 fi
 
-if [ "${FILES_CHANGED}" = "true" ]; then
-    "${SCRIPTS_DIR}/envsubst.sh"
+# Run envsubst and YAML file patching everytime
+"${SCRIPTS_DIR}/envsubst.sh"
+"${SCRIPTS_DIR}/yq-file-patching.sh"
 
-    if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -qR ".*\..*-patch.yml"); then
-        "${SCRIPTS_DIR}/yq-file-patching.sh"
-    fi
-fi
-
+# But run the server properties changes only for changed patch files and full mode
 if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -qR "server\..*-patch\.properties"); then
     "${SCRIPTS_DIR}/update-server-properties.sh"
 fi
