@@ -22,7 +22,6 @@ cleanup() {
     SCRIPT_DONE=1
     # Remove restart pause file
     rm -f "${RESTART_PAUSE_FILE}"
-    #kill -s SIGTERM "${SCRIPT_PID}"
 }
 trap "cleanup" SIGINT SIGTERM
 
