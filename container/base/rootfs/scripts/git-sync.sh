@@ -111,6 +111,7 @@ CHANGED_FILES="$(echo "${CHANGED_FILES}" | sed -r '/'"${GIT_SYNC_IGNORED_CHANGED
 if [ "${MODE}" = "partial" ] && [ -z "${CHANGED_FILES}" ]; then
     echo "git-sync: No changed files detected for partial sync. Exiting ..."
     echo "${REPO_REVISION}" > "${REVISION_FILE}"
+    rm -f "${RESTART_PAUSE_FILE}"
     exit 0
 fi
 
@@ -189,4 +190,5 @@ fi
 
 echo "${REPO_REVISION}" > "${REVISION_FILE}"
 echo "${PLUGINS_LIST_CHECKSUM}" > "${PLUGINS_LIST_CHECKSUM_FILE}"
+rm -f "${RESTART_PAUSE_FILE}"
 echo "git-sync: Completed ${MODE} mode run at $(date)."
