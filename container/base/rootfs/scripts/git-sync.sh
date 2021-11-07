@@ -41,7 +41,6 @@ if [ "${MODE}" = "watch" ]; then
         else
             (( count++ ))
         fi
-        echo "$count"
     done
     exit 0
 fi

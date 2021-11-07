@@ -15,7 +15,7 @@ RUN dnf upgrade -y && \
     dnf install -y \
         adoptopenjdk-16-hotspot wget procps net-tools findutils \
         glibc-locale-source glibc-langpack-en libwebp-tools \
-        rsync inotify-tools tar git && \
+        rsync inotify-tools tar git bind-utils && \
     dnf clean all && \
     localedef --quiet --force -i en_US -f UTF-8 "$LANG" && \
     wget -q "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${YQ_BINARY}.tar.gz" -O - | tar xz && \
