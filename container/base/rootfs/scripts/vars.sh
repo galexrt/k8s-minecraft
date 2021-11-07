@@ -23,7 +23,7 @@ GIT_SYNC_SERVERS_BASE_COPY="${GIT_SYNC_SERVERS_BASE_COPY:-true}"
 
 REMOVE_YAML_PATCH_FILES="${REMOVE_YAML_PATCH_FILES:-false}"
 
-POD_HOSTNAME="$(hostname)"
+POD_HOSTNAME="$(cat /etc/hostname)"
 POD_ID="$(echo "${POD_HOSTNAME}" | rev | cut -d'-' -f1 | rev)"
 # shellcheck disable=SC2034
 POD_ID_PLUS="$(( POD_ID + 1 ))"
