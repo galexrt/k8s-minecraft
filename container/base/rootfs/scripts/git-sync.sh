@@ -134,7 +134,7 @@ fi
 
 # Copying other servers-base/ and per server group and per server files
 if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -q "^servers-base/") && \
-    [ -d "${GIT_SYNC_REPO_DIR}/servers-base/" ]; then
+    [ -d "${GIT_SYNC_REPO_DIR}/servers-base/" ] && [ "${GIT_SYNC_SERVERS_BASE_COPY}" = "true" ]; then
     echo "git-sync: Copying ${GIT_SYNC_REPO_DIR}/servers-base/ ..."
     rsyncCall "${GIT_SYNC_REPO_DIR}/servers-base/" "${DATA_DIR}/"
 fi
