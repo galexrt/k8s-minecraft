@@ -14,8 +14,8 @@ if [ "${FIRST_STARTUP}" = "true" ]; then
     echo "entrypoint: First start up mode is now disabled for next start ups!"
 fi
 
-# Sync data from git
-"${SCRIPTS_DIR}/git-sync.sh" full
+# (Force sync data from git
+GIT_SYNC_FORCE="true" "${SCRIPTS_DIR}/git-sync.sh" full
 
 if [ "${1}" = "java" ]; then
     echo "entrypoint: Running java jar because first arg ist 'java' ..."

@@ -67,7 +67,7 @@ if [ "${MODE}" = "partial" ] && \
     exit 0
 fi
 
-if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
+if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ] && [ "${GIT_SYNC_FORCE}" != "false" ]; then
     server_status="$(cut -d' ' -f2 "${SERVER_STATUS_PLUGIN_STATUS_FILE}")"
     # When the status is `Starting`, we need to wait till it is `Ready`
     if [ "${server_status}" = "Starting" ]; then
