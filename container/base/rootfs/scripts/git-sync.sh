@@ -171,21 +171,23 @@ if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -q "^servers/${GAME
     rsyncCall "${GIT_SYNC_REPO_DIR}/servers/${GAMESERVER_SERVER_NAME_WONUM}/${POD_HOSTNAME}/" "${DATA_DIR}/"
 fi
 
-# Envsubst and yq file patching
-if [ "${MODE}" = "partial" ]; then
-    while IFS= read -r FILE; do
-        CHANGED_DIRS="${DATA_DIR}/$(dirname "${FILE}" | cut -d / -f1-2) ${CHANGED_DIRS}"
-    done <<< "$(echo "${CHANGED_FILES}" | sed -r '/servers-base\//d')"
-    export ENVSUBST_DIRS="${CHANGED_DIRS%' '}"
-fi
+# Run envsubst and YAML file patching, etc., when rsync changed files or force flag set
+if [ "${FILES_CHANGED}" = "true" ] || [ "${FILES_CHANGED_OVERRIDE}" = "true" ]; then
+    # Envsubst and yq file patching
+    if [ "${MODE}" = "partial" ]; then
+        while IFS= read -r FILE; do
+            CHANGED_DIRS="${DATA_DIR}/$(dirname "${FILE}" | cut -d / -f1-2) ${CHANGED_DIRS}"
+        done <<< "$(echo "${CHANGED_FILES}" | sed -r '/servers-base\//d')"
+        export ENVSUBST_DIRS="${CHANGED_DIRS%' '}"
+    fi
 
-# Run envsubst and YAML file patching everytime
-"${SCRIPTS_DIR}/envsubst.sh"
-"${SCRIPTS_DIR}/yq-file-patching.sh"
+    "${SCRIPTS_DIR}/envsubst.sh"
+    "${SCRIPTS_DIR}/yq-file-patching.sh"
 
-# But run the server properties changes only for changed patch files and full mode
-if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -qR "server\..*-patch\.properties"); then
-    "${SCRIPTS_DIR}/update-server-properties.sh"
+    # But run the server properties changes only for changed patch files and full mode
+    if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -qR "server\..*-patch\.properties"); then
+        "${SCRIPTS_DIR}/update-server-properties.sh"
+    fi
 fi
 
 echo "${REPO_REVISION}" > "${REVISION_FILE}"
