@@ -7,6 +7,10 @@ source "${SCRIPTS_DIR}/vars.sh"
 
 # Remove stale restart pause file
 rm -f "${RESTART_PAUSE_FILE}"
+# Reset ServerStatus file
+if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
+    echo "Status: Entrypoint" > "${SERVER_STATUS_PLUGIN_STATUS_FILE}"
+fi
 
 # Create first startup tag file
 if [ "${FIRST_STARTUP}" = "true" ]; then
@@ -15,7 +19,7 @@ if [ "${FIRST_STARTUP}" = "true" ]; then
 fi
 
 # (Force sync data from git
-GIT_SYNC_FORCE="true" "${SCRIPTS_DIR}/git-sync.sh" full
+( export GIT_SYNC_FORCE="true"; "${SCRIPTS_DIR}/git-sync.sh" full; )
 
 if [ "${1}" = "java" ]; then
     echo "entrypoint: Running java jar because first arg ist 'java' ..."
