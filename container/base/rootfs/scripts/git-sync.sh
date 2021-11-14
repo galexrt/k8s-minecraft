@@ -5,6 +5,7 @@ export SCRIPTS_DIR="${SCRIPTS_DIR:-/scripts}"
 # shellcheck disable=SC1091
 source "${SCRIPTS_DIR}/vars.sh"
 
+export DEBUG="${DEBUG:-false}"
 export FILES_CHANGED="false"
 export MODE="${1:-partial}"
 export SCRIPT_DONE=0
@@ -171,11 +172,26 @@ if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -q "^servers/${GAME
 fi
 
 # Envsubst and yq file patching
-if [ "${MODE}" = "partial" ]; then
+if [ "${MODE}" = "partial" ] && [[ "${CHANGED_FILES}" =~ "" ]]; then
+    CHANGED_FILES="$(echo "${CHANGED_FILES//proxy-plugins/plugins}" | sed -r 's/servers-base\///g')"
     while IFS= read -r FILE; do
-        CHANGED_DIRS="${DATA_DIR}/$(dirname "${FILE}" | cut -d / -f1-2) ${CHANGED_DIRS}"
-    done <<< "$(echo "${CHANGED_FILES}" | sed -r '/servers-base\//d')"
+        # If the file is in the root of the server, add the file directly
+        if [ "$(dirname "${FILE}" | cut -d / -f1-2)" = "." ]; then
+            CHANGED_DIRS="${DATA_DIR}/${FILE} ${CHANGED_DIRS}"
+        else
+            CHANGED_DIRS="${DATA_DIR}/$(dirname "${FILE}" | cut -d / -f1-2) ${CHANGED_DIRS}"
+        fi
+    done <<< "${CHANGED_FILES}"
     export ENVSUBST_DIRS="${CHANGED_DIRS%' '}"
+    # If the envsubst dirs is empty, run the envsubst over all files
+    if [ "${ENVSUBST_DIRS}" = "" ] || [ "${ENVSUBST_DIRS}" = " " ]; then
+        unset ENVSUBST_DIRS
+    fi
+
+    if [ "${DEBUG}" = "true" ]; then
+        echo "git-sync: Changed files list: ${CHANGED_FILES}"
+        echo "git-sync: Changed dirs list: ${CHANGED_DIRS}"
+    fi
 fi
 
 "${SCRIPTS_DIR}/envsubst.sh"
