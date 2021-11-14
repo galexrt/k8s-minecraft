@@ -13,7 +13,7 @@ rsyncCall() {
     # shellcheck disable=SC2086
     RSYNC_COMMAND=$(rsync ${RSYNC_FLAGS} -i ${RSYNC_FLAGS} "${1}" "${2}")
     if [ -n "${RSYNC_COMMAND}" ]; then
-        export FILES_CHANGED="true"
+        FILES_CHANGED="true"
     fi
 }
 
@@ -170,23 +170,20 @@ if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -q "^servers/${GAME
     rsyncCall "${GIT_SYNC_REPO_DIR}/servers/${GAMESERVER_SERVER_NAME_WONUM}/${POD_HOSTNAME}/" "${DATA_DIR}/"
 fi
 
-# Run envsubst and YAML file patching, etc., when rsync changed files or force flag set
-if [ "${FILES_CHANGED}" = "true" ] || [ "${FILES_CHANGED_OVERRIDE}" = "true" ]; then
-    # Envsubst and yq file patching
-    if [ "${MODE}" = "partial" ]; then
-        while IFS= read -r FILE; do
-            CHANGED_DIRS="${DATA_DIR}/$(dirname "${FILE}" | cut -d / -f1-2) ${CHANGED_DIRS}"
-        done <<< "$(echo "${CHANGED_FILES}" | sed -r '/servers-base\//d')"
-        export ENVSUBST_DIRS="${CHANGED_DIRS%' '}"
-    fi
+# Envsubst and yq file patching
+if [ "${MODE}" = "partial" ]; then
+    while IFS= read -r FILE; do
+        CHANGED_DIRS="${DATA_DIR}/$(dirname "${FILE}" | cut -d / -f1-2) ${CHANGED_DIRS}"
+    done <<< "$(echo "${CHANGED_FILES}" | sed -r '/servers-base\//d')"
+    export ENVSUBST_DIRS="${CHANGED_DIRS%' '}"
+fi
 
-    "${SCRIPTS_DIR}/envsubst.sh"
-    "${SCRIPTS_DIR}/yq-file-patching.sh"
+"${SCRIPTS_DIR}/envsubst.sh"
+"${SCRIPTS_DIR}/yq-file-patching.sh"
 
-    # But run the server properties changes only for changed patch files and full mode
-    if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -qR "server\..*-patch\.properties"); then
-        "${SCRIPTS_DIR}/update-server-properties.sh"
-    fi
+# But run the server properties changes only for changed patch files and full mode
+if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -qR "server\..*-patch\.properties"); then
+    "${SCRIPTS_DIR}/update-server-properties.sh"
 fi
 
 echo "${REPO_REVISION}" > "${REVISION_FILE}"
