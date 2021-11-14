@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DATA_DIR="${DATA_DIR:-/data}"
-RSYNC_FLAGS="${RSYNC_FLAGS:---ignore-times --recursive --quiet}"
+RSYNC_FLAGS="${RSYNC_FLAGS:---recursive}" # --ignore-times has been removed for now
 JAVA_CMD="${JAVA_CMD:-/usr/bin/java}"
 JAVA_JAR="${JAVA_JAR:-}"
 JAVA_FLAGS="${JAVA_FLAGS:-}"

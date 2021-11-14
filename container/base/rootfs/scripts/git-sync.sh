@@ -6,7 +6,6 @@ export SCRIPTS_DIR="${SCRIPTS_DIR:-/scripts}"
 source "${SCRIPTS_DIR}/vars.sh"
 
 export FILES_CHANGED="false"
-export SCRIPT_PID="$$"
 export MODE="${1:-partial}"
 export SCRIPT_DONE=0
 
@@ -14,7 +13,7 @@ rsyncCall() {
     # shellcheck disable=SC2086
     RSYNC_COMMAND=$(rsync ${RSYNC_FLAGS} -i ${RSYNC_FLAGS} "${1}" "${2}")
     if [ -n "${RSYNC_COMMAND}" ]; then
-        FILES_CHANGED="true"
+        export FILES_CHANGED="true"
     fi
 }
 
