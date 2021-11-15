@@ -67,7 +67,7 @@ if [ "${MODE}" = "partial" ] && \
     exit 0
 fi
 
-if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ] && [ "${GIT_SYNC_FORCE}" != "false" ]; then
+if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
     server_status="$(cut -d' ' -f2 "${SERVER_STATUS_PLUGIN_STATUS_FILE}")"
     # When the status is `Starting`, we need to wait till it is `Ready`
     if [ "${server_status}" = "Starting" ]; then
@@ -172,7 +172,7 @@ if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -q "^servers/${GAME
 fi
 
 # Envsubst and yq file patching
-if [ "${MODE}" = "partial" ] && [[ "${CHANGED_FILES}" =~ "" ]]; then
+if [ "${MODE}" = "partial" ]; then
     CHANGED_FILES="$(echo "${CHANGED_FILES//proxy-plugins/plugins}" | sed -r 's/servers-base\///g')"
     while IFS= read -r FILE; do
         # If the file is in the root of the server, add the file directly
