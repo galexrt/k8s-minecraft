@@ -83,6 +83,10 @@ if [ "${1}" = "java" ]; then
             done
         fi
 
+        # Update ServerStatus file
+        if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
+            echo "Status: Restart" > "${SERVER_STATUS_PLUGIN_STATUS_FILE}"
+        fi
         # Sync data from git
         "${SCRIPTS_DIR}/git-sync.sh" full
     done
