@@ -141,18 +141,19 @@ if [ "${MODE}" = "partial" ]; then
                 continue
             fi
 
+            echo "git-sync: Copying ${PLUGIN_NAME} plugin ..."
             rsyncCall "${GIT_SYNC_REPO_DIR}/${GIT_SYNC_PLUGINS_DIR}/${PLUGIN_NAME}/" "${DATA_DIR}/plugins/"
         fi
     done <<< "${CHANGED_FILES}"
 elif [ "${MODE}" = "full" ]; then
     PLUGINS_TO_INSTALL="$(sed -r -e '/^(|#.*)$/d' "${GIT_SYNC_PLUGINS_INSTALL_FILE_BASE}" "${GIT_SYNC_PLUGINS_INSTALL_FILE}" | sort | uniq)"
-    while IFS= read -r plugin; do
-        echo "git-sync: Copying ${plugin} plugin ..."
-        rsyncCall "${GIT_SYNC_REPO_DIR}/${GIT_SYNC_PLUGINS_DIR}/${plugin}/" "${DATA_DIR}/plugins/"
+    while IFS= read -r PLUGIN_NAME; do
+        echo "git-sync: Copying ${PLUGIN_NAME} plugin ..."
+        rsyncCall "${GIT_SYNC_REPO_DIR}/${GIT_SYNC_PLUGINS_DIR}/${PLUGIN_NAME}/" "${DATA_DIR}/plugins/"
     done < <(printf '%s\n' "${PLUGINS_TO_INSTALL}")
 fi
 
-# Copying other servers-base/ and per server group and per server files
+# Copying other servers-base/, per "server group" and per server files
 if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -q "^servers-base/") && \
     [ -d "${GIT_SYNC_REPO_DIR}/servers-base/" ] && [ "${GIT_SYNC_SERVERS_BASE_COPY}" = "true" ]; then
     echo "git-sync: Copying ${GIT_SYNC_REPO_DIR}/servers-base/ ..."
