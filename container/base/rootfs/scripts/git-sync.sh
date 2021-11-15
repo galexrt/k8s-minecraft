@@ -119,7 +119,7 @@ fi
 if [ "${MODE}" = "full" ]; then
     # Full Mode
     echo "git-sync: Clearing plugin dir jars ..."
-    rm -rf "${DATA_DIR}/plugins/"*.jar
+    rm -rf "${DATA_DIR}/${GIT_SYNC_PLUGINS_DIR}/"*.jar
 fi
 
 # In case the plugin list checksum differs, do a full update without jars
