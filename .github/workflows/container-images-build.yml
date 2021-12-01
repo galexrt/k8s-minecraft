@@ -17,5 +17,7 @@ jobs:
           username: ${{ secrets.REGISTRY_QUAYIO_USERNAME }}
           password: ${{ secrets.REGISTRY_QUAYIO_PASSWORD }}
       - name: Build
+        env:
+          IS_CI: "true"
         run: |
           make -C container/ build push BUILDAH_LAYERS=false

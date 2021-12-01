@@ -16,6 +16,8 @@ jobs:
           username: ${{ secrets.REGISTRY_QUAYIO_USERNAME }}
           password: ${{ secrets.REGISTRY_QUAYIO_PASSWORD }}
       - name: Run Paper MC Version Checker and Updater
+        env:
+          IS_CI: "true"
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com

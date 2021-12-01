@@ -1,6 +1,8 @@
 #!/bin/bash
 
-MC_VERSION="${MC_VERSION:-1.17}"
+export IS_CI="${IS_CI:-false}"
+
+MC_VERSION="${MC_VERSION:-1.18}"
 
 VERSION_CHANGED="false"
 
@@ -38,7 +40,7 @@ fi
 git push
 
 # Start an image build and push, when "need to build images" because a version has been changed
-if [ "${VERSION_CHANGED}" = "true" ]; then
+if [ "${VERSION_CHANGED}" = "true" ] && [ "${IS_CI}" = "true" ]; then
     echo "Starting image build and push because we need to build images"
     make -C ../container/ build push BUILDAH_LAYERS=false
 fi
