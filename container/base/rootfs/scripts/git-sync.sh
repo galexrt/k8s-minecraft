@@ -44,6 +44,8 @@ if [ "${MODE}" = "watch" ]; then
     exit 0
 fi
 
+echo "git-sync: Starting ${MODE} mode run at $(date)"
+
 REPO_REVISION="$(git -C "${GIT_SYNC_REPO_DIR}" log --format="%H" -n 1)"
 SERVER_REVISION="${SERVER_REVISION:-}"
 if [ -f "${REVISION_FILE}" ]; then
@@ -111,6 +113,7 @@ CHANGED_FILES="$(echo "${CHANGED_FILES}" | sed -r '/'"${GIT_SYNC_IGNORED_CHANGED
 if [ "${MODE}" = "partial" ] && [ -z "${CHANGED_FILES}" ] && [ "${PLUGINS_LIST_CHECKSUM}" = "${PLUGINS_LIST_CHECKSUM_NEW}" ]; then
     echo "git-sync: No changed files detected for partial sync. Exiting ..."
     echo "${REPO_REVISION}" > "${REVISION_FILE}"
+    echo "${PLUGINS_LIST_CHECKSUM}" > "${PLUGINS_LIST_CHECKSUM_FILE}"
     rm -f "${RESTART_PAUSE_FILE}"
     exit 0
 fi
