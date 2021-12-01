@@ -22,7 +22,7 @@ if ! grep -q "${PAPER_MC_VERSION}/${PAPER_VERSION}" ../container/paper/Makefile;
     echo "Updating Paper MC version to ${PAPER_MC_VERSION}/${PAPER_VERSION}"
     sed -i -r 's~^VERSION \?=.+$~VERSION ?= '"${PAPER_MC_VERSION}"'/'"${PAPER_VERSION}"'~' ../container/paper/Makefile
     git add ../container/paper/Makefile
-    git commit -m "container: update paper to ${PAPER_VERSION}"
+    git commit -m "container: update paper to ${PAPER_MC_VERSION}/${PAPER_VERSION}"
 fi
 
 # Waterfall
@@ -34,7 +34,7 @@ if ! grep -q "${MC_VERSION}/${WATERFALL_VERSION}" ../container/waterfall/Makefil
     echo "Updating Waterfall version to ${MC_VERSION}/${WATERFALL_VERSION}"
     sed -i -r 's~^VERSION \?=.+$~VERSION ?= '"${MC_VERSION}"'/'"${WATERFALL_VERSION}"'~' ../container/waterfall/Makefile
     git add ../container/waterfall/Makefile
-    git commit -m "container: update waterfall to ${WATERFALL_VERSION}"
+    git commit -m "container: update waterfall to ${MC_VERSION}/${WATERFALL_VERSION}"
 fi
 
 git push
