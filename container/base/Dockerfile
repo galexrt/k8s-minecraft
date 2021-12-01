@@ -5,7 +5,7 @@ ENV HOME="/minecraft" \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US" \
     LC_ALL="en_US.UTF-8" \
-    YQ_VERSION="v4.6.0" \
+    YQ_VERSION="v4.15.1" \
     YQ_BINARY="yq_linux_amd64"
 
 COPY rootfs /
@@ -15,7 +15,7 @@ RUN dnf upgrade -y && \
     dnf install -y \
         adoptopenjdk-16-hotspot wget procps net-tools findutils \
         glibc-locale-source glibc-langpack-en libwebp-tools \
-        rsync inotify-tools tar git bind-utils && \
+        rsync inotify-tools tar git bind-utils tini && \
     dnf clean all && \
     localedef --quiet --force -i en_US -f UTF-8 "$LANG" && \
     wget -q "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${YQ_BINARY}.tar.gz" -O - | tar xz && \
@@ -39,6 +39,6 @@ WORKDIR "$DATA_DIR"
 
 USER 1337
 
-ENTRYPOINT ["/scripts/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/scripts/entrypoint.sh"]
 
 CMD ["java"]
