@@ -40,7 +40,7 @@ RUN dnf upgrade -y && \
     cd "$JAVA_HOME" && \
     tar xfz "/opt/$JAVA_TAR" --strip-components=1 && \
     rm -f "/opt/$JAVA_TAR" && \
-    ln -sfn "$JAVA_HOME/bin/"* /usr/local/bin
+    ln -sfn "$JAVA_HOME/bin/"* /usr/local/bin && \
     chmod -R 770 "$HOME" "$DATA_DIR" /custom_data /custom_scripts && \
     chown -R 1337:1337 "$HOME" "$DATA_DIR" /custom_data /custom_scripts && \
     chmod 755 /scripts/*
