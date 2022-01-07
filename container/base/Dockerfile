@@ -8,8 +8,7 @@ ENV HOME="/minecraft" \
     YQ_VERSION="v4.15.1" \
     YQ_BINARY="yq_linux_amd64" \
     JAVA_DL_URL="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jdk_x64_linux_hotspot_17.0.1_12.tar.gz" \
-    JAVA_HOME="/opt/jdk-17" \
-    PATH="$PATH:$JAVA_HOME/bin"
+    JAVA_HOME="/opt/jdk-17"
 
 COPY rootfs /
 
@@ -41,6 +40,7 @@ RUN dnf upgrade -y && \
     cd "$JAVA_HOME" && \
     tar xfz "/opt/$JAVA_TAR" --strip-components=1 && \
     rm -f "/opt/$JAVA_TAR" && \
+    ln -sfn "$JAVA_HOME/bin/"* /usr/local/bin
     chmod -R 770 "$HOME" "$DATA_DIR" /custom_data /custom_scripts && \
     chown -R 1337:1337 "$HOME" "$DATA_DIR" /custom_data /custom_scripts && \
     chmod 755 /scripts/*
