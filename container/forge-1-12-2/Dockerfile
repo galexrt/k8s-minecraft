@@ -10,7 +10,7 @@ USER 0
 COPY rootfs /
 
 # We need Java 8 for a Minecraft 1.12.2 server
-RUN rm -rf /opt/* && \
+RUN rm -rf /opt/* /usr/local/bin/* && \
     dnf install -y adoptopenjdk-8-hotspot
 
 USER 1337
