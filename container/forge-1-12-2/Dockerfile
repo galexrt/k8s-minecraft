@@ -2,7 +2,7 @@ FROM quay.io/galexrt/k8s-minecraft:base-v0.0.11
 
 ARG VERSION
 
-ENV JAVA_JAR="${HOME}/forge-${VERSION}.jar" && \
+ENV JAVA_JAR="${HOME}/forge-${VERSION}.jar" \
     JAVA_HOME=""
 
 USER 0
