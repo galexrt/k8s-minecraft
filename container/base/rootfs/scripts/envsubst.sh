@@ -7,7 +7,7 @@ export SCRIPTS_DIR="${SCRIPTS_DIR:-/scripts}"
 # shellcheck disable=SC1091
 source "${SCRIPTS_DIR}/vars.sh"
 
-ENVSUBST_DIRS="${ENVSUBST_DIRS:-${DATA_DIR}/*.yml ${DATA_DIR}/plugins}"
+ENVSUBST_DIRS="${ENVSUBST_DIRS:-${DATA_DIR}/*.yml ${DATA_DIR}/server*.properties ${DATA_DIR}/plugins}"
 
 echo "envsubst: Running envsubst on config files ..."
 # shellcheck disable=SC2086
