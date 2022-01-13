@@ -125,7 +125,7 @@ if [ "${MODE}" = "full" ]; then
     rm -rf "${DATA_DIR}/plugins/"*.jar
 fi
 
-# In case the plugin list checksum differs, do a full update without jars
+# In case the plugin list checksum differs, do a full update BUT without jars
 if [ "${PLUGINS_LIST_CHECKSUM}" != "${PLUGINS_LIST_CHECKSUM_NEW}" ]; then
     MODE="full"
 
@@ -139,13 +139,13 @@ if [ "${MODE}" = "partial" ]; then
     # Partial Mode
     while IFS= read -r FILE; do
         if [[ "${FILE}" =~ ^${GIT_SYNC_PLUGINS_DIR}.* ]]; then
-            PLUGIN_NAME="$(echo "${FILE//${GIT_SYNC_PLUGINS_DIR}/}" | cut -d "/" -f1)"
+            PLUGIN_NAME="$(echo "${FILE//"${GIT_SYNC_PLUGINS_DIR}/"}" | cut -d "/" -f1)"
             if ! (grep -qE "^${PLUGIN_NAME}" "${GIT_SYNC_PLUGINS_INSTALL_FILE_BASE}" "${GIT_SYNC_PLUGINS_INSTALL_FILE}"); then
                 continue
             fi
 
             echo "git-sync: Copying ${PLUGIN_NAME} plugin ..."
-            rsyncCall "${GIT_SYNC_REPO_DIR}/${GIT_SYNC_PLUGINS_DIR}/${PLUGIN_NAME}/" "${DATA_DIR}/plugins/"
+            rsyncCall "${GIT_SYNC_REPO_DIR}/"${GIT_SYNC_PLUGINS_DIR}/"${PLUGIN_NAME}/" "${DATA_DIR}/plugins/"
         fi
     done <<< "${CHANGED_FILES}"
 elif [ "${MODE}" = "full" ]; then
