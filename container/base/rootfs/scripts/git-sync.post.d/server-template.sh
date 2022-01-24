@@ -6,6 +6,8 @@ export SCRIPTS_DIR="${SCRIPTS_DIR:-/scripts}"
 source "${SCRIPTS_DIR}/vars.sh"
 
 export DEBUG="${DEBUG:-false}"
+export SERVER_TEMPLATE_PATH="${SERVER_TEMPLATE_PATH:-${SERVER_TEMPLATE_BASE_DIR}/${GAMESERVER_SERVER_NAME_WONUM}}"
+export SERVER_TEMPLATE_MODE="${SERVER_TEMPLATE_MODE:-random}" # `random` or `ordered` mode
 
 if [ "${SERVER_TEMPLATE_ENABLED}" != "true" ]; then
     echo "server-template: Server Template System is disabled."
@@ -24,11 +26,6 @@ fi
 SELECTED_FOLDER=""
 
 case "${SERVER_TEMPLATE_MODE}" in
-# TODO implement logic for ordered mode
-#ordered)
-#    echo "server-template: Ordered Mode"
-#    SELECTED_FOLDER=""
-#    ;;
 *)
     echo "server-template: Random Mode"
     SELECTED_FOLDER="$(find "${SERVER_TEMPLATE_PATH}" -maxdepth 1 -type d -print0 | shuf -zn1 | tr -d '\0')"
@@ -53,6 +50,6 @@ fi
 
 echo "server-template: Copying ${SELECTED_FOLDER}/ to ${DATA_DIR}/ ..."
 # shellcheck disable=SC2086
-rsync -i ${RSYNC_FLAGS} "${SELECTED_FOLDER}/" "${DATA_DIR}/"
+rsync ${RSYNC_FLAGS} "${SELECTED_FOLDER}/" "${DATA_DIR}/"
 
 echo "server-template: Template copy completed."
