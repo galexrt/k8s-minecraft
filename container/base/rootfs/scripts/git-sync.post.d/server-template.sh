@@ -31,13 +31,24 @@ case "${SERVER_TEMPLATE_MODE}" in
 #    ;;
 *)
     echo "server-template: Random Mode"
-    SELECTED_FOLDER="$(find "${SERVER_TEMPLATE_PATH}" -maxdepth 1 -type d -print0 | shuf -zn1)"
+    SELECTED_FOLDER="$(find "${SERVER_TEMPLATE_PATH}" -maxdepth 1 -type d -print0 | shuf -zn1 | tr -d '\0')"
     ;;
 esac
 
 if [ -z "${SELECTED_FOLDER}" ]; then
     ecoh "server-template: No folder has been selected."
     exit 0
+fi
+
+SELECTED_FOLDER_CLEANUP_SCRIPT="${SERVER_TEMPLATE_PATH}/$(basename "${SELECTED_FOLDER}".sh)"
+if [ -x "${SELECTED_FOLDER_CLEANUP_SCRIPT}" ]; then
+    echo "server-template: Running ${SELECTED_FOLDER_CLEANUP_SCRIPT} script ..."
+    bash "${SELECTED_FOLDER_CLEANUP_SCRIPT}"
+fi
+SERVER_CLEANUP_SCRIPT="${SERVER_TEMPLATE_PATH}/cleanup.sh"
+if [ -x "${SERVER_CLEANUP_SCRIPT}" ]; then
+    echo "server-template: Running ${SERVER_CLEANUP_SCRIPT} script ..."
+    bash "${SERVER_CLEANUP_SCRIPT}"
 fi
 
 echo "server-template: Copying ${SELECTED_FOLDER}/ to ${DATA_DIR}/ ..."
