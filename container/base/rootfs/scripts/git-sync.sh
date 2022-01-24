@@ -12,7 +12,7 @@ export SCRIPT_DONE=0
 
 rsyncCall() {
     # shellcheck disable=SC2086
-    RSYNC_COMMAND=$(rsync ${RSYNC_FLAGS} -i ${RSYNC_FLAGS} "${1}" "${2}")
+    RSYNC_COMMAND=$(rsync -i ${RSYNC_FLAGS} "${1}" "${2}")
     if [ -n "${RSYNC_COMMAND}" ]; then
         FILES_CHANGED="true"
     fi
@@ -197,6 +197,10 @@ if [ "${MODE}" = "partial" ]; then
         echo "git-sync: Changed dirs list: ${CHANGED_DIRS}"
     fi
 fi
+
+for POST_SCRIPT in /scripts/git-sync.post.d/*; do
+    bash "${POST_SCRIPT}"
+done
 
 "${SCRIPTS_DIR}/envsubst.sh"
 "${SCRIPTS_DIR}/yq-file-patching.sh"
