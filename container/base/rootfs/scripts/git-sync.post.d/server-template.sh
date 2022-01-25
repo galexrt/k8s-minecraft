@@ -15,7 +15,7 @@ if [ "${SERVER_TEMPLATE_ENABLED}" != "true" ]; then
 fi
 
 if [ ! -d "${SERVER_TEMPLATE_BASE_DIR}" ]; then
-    echo "server-template: Server Template base dir (${SERVER_TEMPLATE_BASE_DIR}) does not exist. Exiting 1 ..."
+    echo "server-template: Server Template base dir (${SERVER_TEMPLATE_BASE_DIR}) does not exist, exiting 1 ..."
     exit 1
 fi
 if [ ! -d "${SERVER_TEMPLATE_PATH}" ]; then
@@ -27,13 +27,18 @@ SELECTED_FOLDER=""
 
 case "${SERVER_TEMPLATE_MODE}" in
 *)
-    echo "server-template: Random Mode"
-    SELECTED_FOLDER="$(find "${SERVER_TEMPLATE_PATH}" -maxdepth 1 -type d -print0 | shuf -zn1 | tr -d '\0')"
+    SELECTED_FOLDER="$(find "${SERVER_TEMPLATE_PATH}" -mindepth 1 -maxdepth 1 -type d -print0 | shuf -zn1 | tr -d '\0')"
     ;;
 esac
 
 if [ -z "${SELECTED_FOLDER}" ]; then
-    ecoh "server-template: No folder has been selected."
+    echo "server-template: No folder has been selected."
+    exit 0
+fi
+echo "server-template: Selected template folder (mode: ${SERVER_TEMPLATE_MODE}): ${SELECTED_FOLDER}"
+
+if [ "${SELECTED_FOLDER}" = "${SERVER_TEMPLATE_PATH}" ]; then
+    echo "server-template: Selected folder did not return a template folder, exiting ..."
     exit 0
 fi
 
