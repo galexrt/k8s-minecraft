@@ -35,6 +35,11 @@ if [ "${1}" = "java" ]; then
         # shellcheck disable=SC2086
         set -- ${JAVA_FLAGS} "${@}"
     fi
+    if [ -n "${JAVA_ADDITIONAL_FLAGS}" ]; then
+        echo "entrypoint: Adding JAVA_ADDITIONAL_FLAGS to args"
+        # shellcheck disable=SC2086
+        set -- ${JAVA_ADDITIONAL_FLAGS} "${@}"
+    fi
 
     # Set Java PID to the script till the PID is set
     java_pid="$$"
