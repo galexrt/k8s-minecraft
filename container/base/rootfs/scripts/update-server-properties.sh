@@ -7,6 +7,11 @@ export SCRIPTS_DIR="${SCRIPTS_DIR:-/scripts}"
 # shellcheck disable=SC1091
 source "${SCRIPTS_DIR}/vars.sh"
 
+if [ "${SERVER_PROPERTIES_FILE_ENABLED}" != "true" ]; then
+    echo "update-server-properties: Skipping server.properties patching."
+    exit 0
+fi
+
 SERVER_PROPERTIES_FILE="${DATA_DIR}/server.properties"
 
 if [ ! -f "${SERVER_PROPERTIES_FILE}" ]; then
