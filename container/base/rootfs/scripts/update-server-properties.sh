@@ -14,8 +14,10 @@ if [ ! -f "${SERVER_PROPERTIES_FILE}" ]; then
     exit 0
 fi
 
-# Load patch / tweak files
-SERVER_PROPERTIES="$(awk -F= '!a[$1]++' $(find "${DATA_DIR}" -maxdepth 1 -iname 'server.*-patch.properties') "${SERVER_PROPERTIES_FILE}")"
-echo "${SERVER_PROPERTIES}" > "${SERVER_PROPERTIES_FILE}"
+# Iterate over every server properties patch file
+for PROPERTIES_FILE in server.*-patch.properties; do
+    SERVER_PROPERTIES="$(awk -F= '!a[$1]++' "${PROPERTIES_FILE}" "${SERVER_PROPERTIES_FILE}" | sort)"
+    echo "${SERVER_PROPERTIES}" > "${SERVER_PROPERTIES_FILE}"
+done
 
 echo "update-server-properties: Done applying patches."
