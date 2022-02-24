@@ -4,6 +4,6 @@ ARG VERSION
 
 ENV JAVA_JAR="${HOME}/limbo.jar" LIMBO_VERSION="${VERSION}"
 
-RUN wget -q -O "${JAVA_JAR}" "${LIMBO_VERSION}"
+RUN wget -q -O "${JAVA_JAR}" "https://ci.loohpjames.com/job/Limbo/9/artifact/target/Limbo-${LIMBO_VERSION}.jar"
 
 EXPOSE 30000/tcp
