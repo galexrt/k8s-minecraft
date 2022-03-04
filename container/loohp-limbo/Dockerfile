@@ -1,9 +1,0 @@
-FROM quay.io/galexrt/k8s-minecraft:base-v0.1.6
-
-ARG VERSION
-
-ENV JAVA_JAR="${HOME}/limbo.jar" LIMBO_VERSION="${VERSION}"
-
-RUN wget -q -O "${JAVA_JAR}" "https://ci.loohpjames.com/job/Limbo/9/artifact/target/Limbo-${LIMBO_VERSION}.jar"
-
-EXPOSE 30000/tcp
