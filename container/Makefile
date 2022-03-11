@@ -3,7 +3,7 @@
 BUILDAH ?= buildah
 BUILDAH_LAYERS ?= false
 
-IMAGES ?= base paper waterfall forge-1-12-2
+IMAGES ?= base paper waterfall
 
 .PHONY: build
 build: $(addprefix build-, $(IMAGES))
