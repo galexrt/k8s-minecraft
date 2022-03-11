@@ -199,7 +199,7 @@ if [ "${MODE}" = "partial" ]; then
 fi
 
 for POST_SCRIPT in /scripts/git-sync.post.d/*; do
-    bash "${POST_SCRIPT}"
+    bash "${POST_SCRIPT}" "${MODE}"
 done
 
 "${SCRIPTS_DIR}/envsubst.sh"

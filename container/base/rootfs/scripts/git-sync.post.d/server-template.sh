@@ -9,6 +9,11 @@ export DEBUG="${DEBUG:-false}"
 export SERVER_TEMPLATE_PATH="${SERVER_TEMPLATE_PATH:-${SERVER_TEMPLATE_BASE_DIR}/${GAMESERVER_SERVER_NAME_WONUM}}"
 export SERVER_TEMPLATE_MODE="${SERVER_TEMPLATE_MODE:-random}" # `random` or `ordered` mode
 
+if [ "${MODE}" = "partial" ]; then
+    echo "server-template: Not updating server template during partial git-syncs!"
+    exit 0
+fi
+
 if [ "${SERVER_TEMPLATE_ENABLED}" != "true" ]; then
     echo "server-template: Server Template System is disabled."
     exit
