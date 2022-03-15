@@ -20,6 +20,7 @@ RUN dnf upgrade -y && \
         rsync inotify-tools tar git bind-utils && \
     dnf clean all && \
     localedef --quiet --force -i en_US -f UTF-8 "$LANG" && \
+    echo "YQ download and install" && \
     wget -O- -q -T 5 -t 3 "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${YQ_BINARY}.tar.gz" | tar xz && \
     mv "${YQ_BINARY}" /usr/bin/yq && \
     chmod 755 /usr/bin/yq && \
@@ -33,6 +34,7 @@ RUN dnf upgrade -y && \
         --create-home \
         --home-dir "$HOME" \
         minecraft && \
+    echo "Java Install" && \
     cd /opt && \
     JAVA_TAR="$(basename "$JAVA_DL_URL")" && \
     wget -O "/opt/$JAVA_TAR" -q -T 5 -t 3 "$JAVA_DL_URL" && \
@@ -41,6 +43,7 @@ RUN dnf upgrade -y && \
     tar xfz "/opt/$JAVA_TAR" --strip-components=1 && \
     rm -f "/opt/$JAVA_TAR" && \
     ln -sfn "$JAVA_HOME/bin/"* /usr/local/bin && \
+    echo "Java Install Completed" && \
     chmod -R 770 "$HOME" "$DATA_DIR" /custom_data /custom_scripts && \
     chown -R 1337:1337 "$HOME" "$DATA_DIR" /custom_data /custom_scripts && \
     chmod 755 /scripts/*
