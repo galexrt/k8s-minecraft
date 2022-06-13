@@ -2,7 +2,7 @@
 
 export IS_CI="${IS_CI:-false}"
 
-MC_VERSION="${MC_VERSION:-1.18}"
+MC_VERSION="${MC_VERSION:-1.19}"
 
 VERSION_CHANGED="false"
 
