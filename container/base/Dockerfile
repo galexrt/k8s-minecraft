@@ -7,8 +7,8 @@ ENV HOME="/minecraft" \
     LC_ALL="en_US.UTF-8" \
     YQ_VERSION="v4.15.1" \
     YQ_BINARY="yq_linux_amd64" \
-    JAVA_DL_URL="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jdk_x64_linux_hotspot_17.0.1_12.tar.gz" \
-    JAVA_HOME="/opt/jdk-17"
+    JAVA_DL_URL="https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.1%2B10/OpenJDK18U-jdk_x64_linux_hotspot_18.0.1_10.tar.gz" \
+    JAVA_HOME="/opt/jdk-18"
 
 COPY rootfs /
 
