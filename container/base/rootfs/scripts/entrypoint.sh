@@ -53,17 +53,17 @@ if [ "${1}" = "java" ]; then
     trap cleanup SIGINT SIGTERM
 
     while true; do
-        echo "entrypoint: $(date) Running java command: ${JAVA_CMD} ${*}"
+        echo "entrypoint: $(date +"%Y-%m-%d %T") Running java command: ${JAVA_CMD} ${*}"
         "${JAVA_CMD}" "${@}" < /dev/stdin &
         java_pid=$!
 
         wait "${java_pid}"
         rt=$?
         if [ "${RESTART_JAVA_PROCESS}" != "true" ]; then
-            echo "entrypoint: $(date) Java program exited with code ${rt}, terminating script."
+            echo "entrypoint: $(date +"%Y-%m-%d %T") Java program exited with code ${rt}, terminating script."
             exit ${rt}
         fi
-        echo "entrypoint: $(date) Java program exited with code ${rt}, restarting ..."
+        echo "entrypoint: $(date +"%Y-%m-%d %T") Java program exited with code ${rt}, restarting ..."
 
         if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
             # Set Server status to be starting and wait a second
@@ -72,7 +72,7 @@ if [ "${1}" = "java" ]; then
         fi
 
         if [ -e "${RESTART_PAUSE_FILE}" ]; then
-            echo "entrypoint: $(date) Restart pause file found (contents: '$(cat "${RESTART_PAUSE_FILE}")'), waiting ${RESTART_PAUSE_CHECK_INTERVAL} seconds ..."
+            echo "entrypoint: $(date +"%Y-%m-%d %T") Restart pause file found (contents: '$(cat "${RESTART_PAUSE_FILE}")'), waiting ${RESTART_PAUSE_CHECK_INTERVAL} seconds ..."
             while true; do
                 sleep "${RESTART_PAUSE_CHECK_INTERVAL}"
                 if [ "${RESTART_JAVA_PROCESS}" != "true" ]; then
@@ -81,10 +81,10 @@ if [ "${1}" = "java" ]; then
                 fi
 
                 if [ ! -e "${RESTART_PAUSE_FILE}" ]; then
-                    echo "entrypoint: $(date) Restart pause file not found (anymore), continuing restart ..."
+                    echo "entrypoint: $(date +"%Y-%m-%d %T") Restart pause file not found (anymore), continuing restart ..."
                     break
                 fi
-                echo "entrypoint: $(date) Restart pause file found, waiting ${RESTART_PAUSE_CHECK_INTERVAL} seconds ..."
+                echo "entrypoint: $(date +"%Y-%m-%d %T") Restart pause file found, waiting ${RESTART_PAUSE_CHECK_INTERVAL} seconds ..."
             done
         fi
 
@@ -97,6 +97,6 @@ if [ "${1}" = "java" ]; then
     done
 fi
 
-echo "entrypoint: $(date) Running arbitrary command ..."
+echo "entrypoint: $(date +"%Y-%m-%d %T") Running arbitrary command ..."
 set -x
 exec "${@}"

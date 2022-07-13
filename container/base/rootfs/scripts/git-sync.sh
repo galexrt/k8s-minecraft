@@ -44,7 +44,7 @@ if [ "${MODE}" = "watch" ]; then
     exit 0
 fi
 
-echo "git-sync: Starting ${MODE} mode run at $(date)"
+echo "git-sync: Starting ${MODE} mode run at $(date +"%Y-%m-%d %T")"
 
 REPO_REVISION="$(git -C "${GIT_SYNC_REPO_DIR}" log --format="%H" -n 1)"
 SERVER_REVISION="${SERVER_REVISION:-}"
@@ -65,7 +65,7 @@ fi
 # If it is a partial mode run and server vs repo revision and plugin list is the same, nothing to do here
 if [ "${MODE}" = "partial" ] && \
     [ "${SERVER_REVISION}" = "${REPO_REVISION}" ] && [ "${PLUGINS_LIST_CHECKSUM}" = "${PLUGINS_LIST_CHECKSUM_NEW}" ]; then
-    echo "git-sync: $(date) Repo and Server Revision and plugin install list is the same no need to do update."
+    echo "git-sync: $(date +"%Y-%m-%d %T") Repo and Server Revision and plugin install list is the same no need to do update."
     exit 0
 fi
 
@@ -78,20 +78,20 @@ if [ -f "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
             sleep 3
 
             if [ ! -e "${SERVER_STATUS_PLUGIN_STATUS_FILE}" ]; then
-                echo "git-sync: $(date) WARNING! Server Status file not found anymore, continuing plugins install ..."
+                echo "git-sync: $(date +"%Y-%m-%d %T") WARNING! Server Status file not found anymore, continuing plugins install ..."
                 break
             fi
 
             server_status="$(cut -d' ' -f2 "${SERVER_STATUS_PLUGIN_STATUS_FILE}")"
             if [ "${server_status}" != "Starting" ]; then
-                echo "git-sync: $(date) Server Status is now ${server_status}, continuing plugin install ..."
+                echo "git-sync: $(date +"%Y-%m-%d %T") Server Status is now ${server_status}, continuing plugin install ..."
                 break
             fi
-            echo "git-sync: $(date) Server Status still not changed, waiting 3 seconds ..."
+            echo "git-sync: $(date +"%Y-%m-%d %T") Server Status still not changed, waiting 3 seconds ..."
         done
     fi
 fi
-echo "$(date) GITSYNC:${MODE}" > "${RESTART_PAUSE_FILE}"
+echo "$(date +"%Y-%m-%d %T") GITSYNC:${MODE}" > "${RESTART_PAUSE_FILE}"
 
 CHANGED_FILES=$(git -C "${GIT_SYNC_REPO_DIR}" diff --name-only HEAD "${SERVER_REVISION}")
 # shellcheck disable=SC2181
@@ -213,4 +213,4 @@ fi
 echo "${REPO_REVISION}" > "${REVISION_FILE}"
 echo "${PLUGINS_LIST_CHECKSUM_NEW}" > "${PLUGINS_LIST_CHECKSUM_FILE}"
 rm -f "${RESTART_PAUSE_FILE}"
-echo "git-sync: Completed ${MODE} mode run at $(date)."
+echo "git-sync: Completed ${MODE} mode run at $(date +"%Y-%m-%d %T")."
