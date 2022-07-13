@@ -206,7 +206,7 @@ done
 "${SCRIPTS_DIR}/yq-file-patching.sh"
 
 # But run the server properties changes only for changed patch files and full mode
-if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -qR "server\..*-patch\.properties"); then
+if ([ "${MODE}" = "full" ] || echo "${CHANGED_FILES}" | grep -q "server\..*-patch\.properties"); then
     "${SCRIPTS_DIR}/update-server-properties.sh"
 fi
 
