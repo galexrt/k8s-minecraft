@@ -1,4 +1,4 @@
-FROM quay.io/galexrt/k8s-minecraft:base-v0.1.7
+FROM quay.io/galexrt/k8s-minecraft:base-v0.1.8
 
 ARG VERSION
 
