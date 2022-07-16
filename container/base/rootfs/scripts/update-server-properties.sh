@@ -19,6 +19,7 @@ if [ ! -f "${SERVER_PROPERTIES_FILE}" ]; then
     exit 0
 fi
 
+echo "update-server-properties: Patching server.properties file."
 # Iterate over every server properties patch file
 for PROPERTIES_FILE in server.*-patch.properties; do
     SERVER_PROPERTIES="$(awk -F= '!a[$1]++' "${PROPERTIES_FILE}" "${SERVER_PROPERTIES_FILE}" | sort)"
