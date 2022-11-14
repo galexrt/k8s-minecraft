@@ -1,4 +1,4 @@
-VERSION ?= 1.19/506
+VERSION ?= 1.19/507
 IMAGE_NAME = waterfall
 
 include ../Makefile.common
